@@ -1,0 +1,240 @@
+
+assign3/
+assign3/news.awk
+assign3/newsread.awk
+assign3/newsfeed.awk
+
+total 20
+drwx--x--x 2 maynard maynard 4096 Feb 14 11:58 .
+drwx--x--x 3 maynard maynard 4096 Feb 16 08:40 ..
+-rw------- 1 maynard maynard   56 Feb 14 11:57 news.awk
+-rw------- 1 maynard maynard  543 Feb 14 11:58 newsfeed.awk
+-rw------- 1 maynard maynard 1591 Feb 14 11:57 newsread.awk
+
+*******************************
+*******************************
+News Awk Script
+*******************************
+*******************************
+
+BEGIN{FS= " [0-9]+ [0-9]+ "}
+{print "addgroup", $1, $2}
+
+*******************************
+News Awk Output
+*******************************
+
+*******************************
+addgroup general y
+addgroup news.announce.newusers m
+addgroup utsa.test y
+addgroup comp.arch y
+addgroup comp.os.minix y
+addgroup comp.sources.unix m
+addgroup comp.sources.misc m
+addgroup comp.sources.games m
+addgroup utsa.cs.2413.d y
+addgroup utsa.cs.2413 y
+*******************************
+
+CORRECT
+
+
+*******************************
+*******************************
+News Feed Awk Script
+*******************************
+*******************************
+
+{ FEED[$5] = 1 }
+NR == 1 {startTime = $1 " " $2 " " $3}
+$4 == "+" {ACCEPT[$5]++}
+$4 == "j" {ACCEPT[$5]++}
+$4 == "-" {REJECT[$5]++}
+$4 == "c" {CANCEL[$5]++; ACCEPT[$5]++}
+END{
+    printf "\n%45s\n\n\n", "Incoming News Feed Summary";
+    printf "%-22s  %-10s    %-10s    %-10s\n", "", "accepted", "rejected", "canceled";
+    for(i in FEED){
+        printf "%-22s  %-10d    %-10d    %-10d\n", i, ACCEPT[i]+0, REJECT[i]+0,CANCEL[i]+0;
+    }
+    msg = $1 " " $2 " " $3;
+    printf "\nStart Time = %-25s End Time = %s\n\n", startTime, msg;
+}       
+
+*******************************
+Student News Feed Output
+*******************************
+
+
+-------------------------------
+Student News Feed out
+-------------------------------
+
+*******************************
+
+                   Incoming News Feed Summary
+
+
+                        accepted      rejected      canceled  
+news.cais.net           14374         240           0         
+ringer.cs.utsa.edu      3             0             0         
+lonestar.jpl.utsa.edu   31            0             0         
+not-for-mail            9             0             0         
+hkhawaja                2             0             0         
+runner                  5             0             0         
+rhefner                 1             0             0         
+swrinde                 94755         19683         0         
+?                       3             0             3         
+neptune.cs.trinity.edu  2             0             0         
+
+Start Time = Feb 13 21:28:38.409       End Time = Feb 14 20:56:49.066
+
+*******************************
+
+
+ERROR - News Feed Awk Script Error
+********* Diff for News Feed Output *********
+1a2
+> 
+6,15c7,9
+< news.cais.net           14374         240           0         
+< ringer.cs.utsa.edu      3             0             0         
+< lonestar.jpl.utsa.edu   31            0             0         
+< not-for-mail            9             0             0         
+< hkhawaja                2             0             0         
+< runner                  5             0             0         
+< rhefner                 1             0             0         
+< swrinde                 94755         19683         0         
+< ?                       3             0             3         
+< neptune.cs.trinity.edu  2             0             0         
+---
+> swrinde: 	94755		19683		0
+> news.cais.net: 	14374		240		0
+> ?: 		3		0		3
+18d11
+< 
+********* End of Diff for News Feed Output *********
+
+********* Correct News Feed Awk Output *********
+
+
+                      Incoming News Feed Summary
+
+
+		accepted 	rejected 	canceled
+swrinde: 	94755		19683		0
+news.cais.net: 	14374		240		0
+?: 		3		0		3
+
+Start Time = Feb 13 21:28:38.409	 End Time = Feb 14 20:56:49.066
+********* End of Correct News Feed Awk Output *********
+
+*******************************
+*******************************
+News Read Awk Script
+*******************************
+*******************************
+
+$7 == "group" { NGART[$6, $8] += $9 }
+$7 == "exit"  { ARTICLE[$6] += $9; GROUP[$6] += $11 }
+$7 == "times" { ELAPSE[$6] += $13 }
+NR == 1 {startTime = $1 " " $2 " " $3}
+END{
+for(i in ARTICLE){
+    if(match(i, /ring[0-4][0-9].cs.utsa.edu/)){
+        ringArtTot += ARTICLE[i];
+        ringGrpTot += GROUP[i];
+        ringCs += NGART[i, "utsa.cs.2413"];
+        ringCsD += NGART[i, "utsa.cs.2413.d"];
+        ringTime += ELAPSE[i];
+    }
+}
+printf "\n%50s\n\n", "News Reader Summary";
+printf "\n%15s %-15s %-15s %-15s %-15s\n\n", "", "lonestar", "runner", "ringer", "rings";
+printf "%-15s %-15d %-15d %-15d %-15d\n", "Articles:", ARTICLE["lonestar.jpl.utsa.edu"]+0, ARTICLE["runner.jpl.utsa.edu"]+0, ARTICLE["ringer.cs.utsa.edu"]+0, ringArtTot+0;
+printf "%-15s %-15d %-15d %-15d %-15d\n", "Groups:", GROUP["lonestar.jpl.utsa.edu"]+0, GROUP["runner.jpl.utsa.edu"]+0, GROUP["ringer.cs.utsa.edu"]+0, ringGrpTot+0;
+printf "%-15s %-15d %-15d %-15d %-15d\n", "Cs2413:", NGART["lonestar.jpl.utsa.edu","utsa.cs.2413"]+0, NGART["runner.jpl.utsa.edu","utsa.cs.2413"]+0, NGART["ringer.cs.utsa.edu","utsa.cs.2413"]+0, ringCs+0;
+printf "%-15s %-15d %-15d %-15d %-15d\n", "Cs2413.d:", NGART["lonestar.jpl.utsa.edu","utsa.cs.2413.d"]+0, NGART["runner.jpl.utsa.edu","utsa.cs.2413.d"]+0, NGART["ringer.cs.utsa.edu","utsa.cs.2413.d"]+0, ringCsD+0;
+printf "%-15s %-15.3f %-15.3f %-15.3f %-15.3f\n", "User Time:", ELAPSE["lonestar.jpl.utsa.edu"]+0, ELAPSE["runner.jpl.utsa.edu"]+0, ELAPSE["ringer.cs.utsa.edu"]+0, ringTime+0;
+msg = $1 " " $2 " " $3;
+printf "\nStart Time = %-25s End Time = %s\n\n", startTime, msg;
+}
+
+*******************************
+News Read Awk Output
+*******************************
+
+
+-------------------------------
+Student News Read Output
+-------------------------------
+
+*******************************
+
+                               News Reader Summary
+
+
+                lonestar        runner          ringer          rings          
+
+Articles:       72256           12533           1               4521           
+Groups:         5282            8344            19              1068           
+Cs2413:         0               0               0               12             
+Cs2413.d:       40              25              0               274            
+User Time:      266197.377      83377.166       128.554         98294.833      
+
+Start Time = Feb 13 21:27:14           End Time = Feb 14 20:56:49
+
+*******************************
+
+
+ERROR - News Read Awk Script Error
+********* Diff for News Read Output *********
+1a2
+> 
+11c12
+< User Time:      266197.377      83377.166       128.554         98294.833      
+---
+> User Time: 	266197		83377.2		128.554		98294.8
+14d14
+< 
+********* End of Diff for News Read Output *********
+
+********* Correct News Read Output *********
+
+
+                          News Reader Summary
+
+
+		lonestar 	runner 		ringer 		rings
+
+Articles: 	72256		12533		1		4521
+Groups: 	5282		8344		19		1068
+Cs2413: 	0		0		0		12
+Cs2413.d: 	40		25		0		274
+User Time: 	266197		83377.2		128.554		98294.8
+
+Start Time = Feb 13 21:27:14		 End Time = Feb 14 20:56:49
+********* End of Correct News Read Output *********
+
+
+Possible Points:  30
+
+News Comments:
+
+News Feed Comments:
+
+  1.  News Feed output not exactly as specs! -1
+      (I know, this is trivial but I want the specs
+       followed exactly!)
+  2.  News Feed has feeds not specified -1
+
+News Read Comments:
+
+Points:
+
+  News:        10
+  News Feed:    8
+  News Read:   10
+
+Total Points:  28
