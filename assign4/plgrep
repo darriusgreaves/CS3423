@@ -1,0 +1,58 @@
+#!/usr/bin/perl -w
+die "prog2 [-f] <regxpr> <file/dir list>\n" if @ARGV < 2;
+
+# set the flag if necessary
+$flag = shift;
+if( $flag eq "-f"){
+    $regexpr = shift;
+    $bflag = 1;
+}
+else{
+    $regexpr = $flag;
+    $bflag = 0;
+}
+
+# Get a list of files to search
+while(@ARGV){
+    $arg = shift;
+    if( -d $arg){
+        @fnames = `/usr/bin/find $arg`;
+        foreach $f (@fnames){
+            chop $f;
+            if (-f $f){
+                push(@files,$f);
+            }
+        }
+    }else{
+        push(@files,$arg);
+    }
+}
+
+# Open files in list and search for regex
+while($arg = shift @files){
+    if ( -f $arg ) { 
+        if( -T $arg){
+            open(LINES, $arg) or die "could not open $arg to read: $!";
+        }else{
+            @LINES = `/usr/bin/strings $arg`;
+        }
+        while(<LINES>){
+            if(/$regexpr/){
+                push(@{$results{$arg}},$_);
+            }
+        }
+    }
+}
+
+# Print results
+if($bflag == 1){
+    foreach $file (keys(%results)){
+        print "$file\n";
+    }
+}else{
+    foreach $file (keys(%results)){
+        foreach $expr (@{$results{$file}}){
+            print "$file:$expr";
+        }
+    }
+}

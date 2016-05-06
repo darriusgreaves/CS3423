@@ -1,0 +1,794 @@
+
+
+
+----------
+--  vud447
+----------
+assign4/
+assign4/ddiff
+assign4/plgrep
+assign4/mysha256
+
+total 20
+drwx--x--x 2 maynard maynard 4096 Feb 29 22:31 .
+drwx--x--x 3 maynard maynard 4096 Mar  1 09:33 ..
+-rwx------ 1 maynard maynard 1899 Feb 29 22:30 ddiff
+-rwx--x--x 1 maynard maynard  347 Feb 29 22:30 mysha256
+-rwx--x--x 1 maynard maynard 1183 Feb 29 22:30 plgrep
+*******************************
+grade4.sha1.in
+*******************************
+grade4.dir0
+grade4.dir1
+grade4.dir2
+*******************************
+
+*******************************
+directory heirarchy mysha256
+*******************************
+grade4.dir0:
+a
+b
+grade1
+
+grade4.dir0/a:
+grade2
+
+grade4.dir0/b:
+c
+grade3
+
+grade4.dir0/b/c:
+d
+e
+grade4
+grade4.bin
+grade7
+
+grade4.dir0/b/c/d:
+grade5
+
+grade4.dir0/b/c/e:
+f
+grade6
+
+grade4.dir0/b/c/e/f:
+grade7
+
+grade4.dir1:
+file1
+file2
+file3
+file4
+file5
+file6
+
+grade4.dir2:
+file3
+file4
+file5
+file6
+file7
+file8
+*******************************
+*******************************
+Executing mysha256 grade4.sha1.in sha1out
+*******************************
+*******************************
+sha1out
+*******************************
+*******************************
+*******************************
+sorted sha1out
+*******************************
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1,21
+> grade4.dir0/a/grade2	7921c488aa5f482982c7fd1b2a9dcee9f9961fb77df62fa1288fb698811c7bbe
+> grade4.dir0/b/c/d/grade5	8e8d30fb195141b4ce1ee0cfc3b20e0e7a4ef607e2573a8bd5056bc5993d058b
+> grade4.dir0/b/c/e/f/grade7	fd639b4eaca4205c67bf970fcaa74ef8a1cf80a6b1a2ec23355d191de3896775
+> grade4.dir0/b/c/e/grade6	afdcbb4a06c05bbaa89164e7a259683b94cc9cbdfbbf85b329535763e4c148aa
+> grade4.dir0/b/c/grade4	ed9f525f560d5daaa087f3716a5adf9d1ffd6cb11fc300c0e2d365f5598de809
+> grade4.dir0/b/c/grade4.bin	df3fecd1d8727398a2e6b0a941077bfeb7c9bdf39b74852d7cc79fcdadedcc59
+> grade4.dir0/b/c/grade7	fd639b4eaca4205c67bf970fcaa74ef8a1cf80a6b1a2ec23355d191de3896775
+> grade4.dir0/b/grade3	1d5de5fe20f32d2762714c1887f3db16aa676138e29d4bd54539d6ff6ab0757b
+> grade4.dir0/grade1	02e0ef1f98e2b451d5286cee3e2aa346396691a256142ac7a1331d0f5d8ec9d2
+> grade4.dir1/file1	5f1b4b66c105ffc36cebff87e0722cb8f44e40e750956cfb1af393a5953bcc01
+> grade4.dir1/file2	1717e4e1b064def2f2a2e55f75d31a3ae81662162cf8ae82aa1c278b40f82ebf
+> grade4.dir1/file3	112b017adda226b5dbd6001fc31e3c9ee3b8cb85cd2f816a33c7c6df60106b92
+> grade4.dir1/file4	5090787287089338224b2b1aa07a0d3086461ca15b93192250e212d0dc7492fa
+> grade4.dir1/file5	813a20e5f0afc67ebed1573ba7b34950151712df63100bef8525a3d84759910a
+> grade4.dir1/file6	647b69e13370508158058a99f799e3f59400340b2e47b3b6fef4c4c5e7f8b3b0
+> grade4.dir2/file3	cd3a57cb609293f7d6d12bcabbcb7d162ea4b56dfe60fad4605c921b68e4428f
+> grade4.dir2/file4	5090787287089338224b2b1aa07a0d3086461ca15b93192250e212d0dc7492fa
+> grade4.dir2/file5	3094d75ad277c8b6871981efd45e6d00035d732222475239027f338be4d7c1f9
+> grade4.dir2/file6	647b69e13370508158058a99f799e3f59400340b2e47b3b6fef4c4c5e7f8b3b0
+> grade4.dir2/file7	afb02a9f02e751995438f665e176d20ec73fec7bf1b9ebbbd581d4f7192e7fbe
+> grade4.dir2/file8	4462b7611c0b948fd97aea05f90f7950763f783428137019c35c879541d36f5c
+*******************************
+*******************************
+Executing mysha256 grade4.sha1.in
+*******************************
+Use of uninitialized value $ARGV[1] in concatenation (.) or string at /tmp/cs342314829/assign4/mysha256 line 4.
+*******************************
+*******************************
+sorted sha1out
+*******************************
+Use of uninitialized value $ARGV[1] in concatenation (.) or string at /tmp/cs342314829/assign4/mysha256 line 4.
+*******************************
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+1c1,21
+< Use of uninitialized value $ARGV[1] in concatenation (.) or string at /tmp/cs342314829/assign4/mysha256 line 4.
+---
+> grade4.dir0/a/grade2	7921c488aa5f482982c7fd1b2a9dcee9f9961fb77df62fa1288fb698811c7bbe
+> grade4.dir0/b/c/d/grade5	8e8d30fb195141b4ce1ee0cfc3b20e0e7a4ef607e2573a8bd5056bc5993d058b
+> grade4.dir0/b/c/e/f/grade7	fd639b4eaca4205c67bf970fcaa74ef8a1cf80a6b1a2ec23355d191de3896775
+> grade4.dir0/b/c/e/grade6	afdcbb4a06c05bbaa89164e7a259683b94cc9cbdfbbf85b329535763e4c148aa
+> grade4.dir0/b/c/grade4	ed9f525f560d5daaa087f3716a5adf9d1ffd6cb11fc300c0e2d365f5598de809
+> grade4.dir0/b/c/grade4.bin	df3fecd1d8727398a2e6b0a941077bfeb7c9bdf39b74852d7cc79fcdadedcc59
+> grade4.dir0/b/c/grade7	fd639b4eaca4205c67bf970fcaa74ef8a1cf80a6b1a2ec23355d191de3896775
+> grade4.dir0/b/grade3	1d5de5fe20f32d2762714c1887f3db16aa676138e29d4bd54539d6ff6ab0757b
+> grade4.dir0/grade1	02e0ef1f98e2b451d5286cee3e2aa346396691a256142ac7a1331d0f5d8ec9d2
+> grade4.dir1/file1	5f1b4b66c105ffc36cebff87e0722cb8f44e40e750956cfb1af393a5953bcc01
+> grade4.dir1/file2	1717e4e1b064def2f2a2e55f75d31a3ae81662162cf8ae82aa1c278b40f82ebf
+> grade4.dir1/file3	112b017adda226b5dbd6001fc31e3c9ee3b8cb85cd2f816a33c7c6df60106b92
+> grade4.dir1/file4	5090787287089338224b2b1aa07a0d3086461ca15b93192250e212d0dc7492fa
+> grade4.dir1/file5	813a20e5f0afc67ebed1573ba7b34950151712df63100bef8525a3d84759910a
+> grade4.dir1/file6	647b69e13370508158058a99f799e3f59400340b2e47b3b6fef4c4c5e7f8b3b0
+> grade4.dir2/file3	cd3a57cb609293f7d6d12bcabbcb7d162ea4b56dfe60fad4605c921b68e4428f
+> grade4.dir2/file4	5090787287089338224b2b1aa07a0d3086461ca15b93192250e212d0dc7492fa
+> grade4.dir2/file5	3094d75ad277c8b6871981efd45e6d00035d732222475239027f338be4d7c1f9
+> grade4.dir2/file6	647b69e13370508158058a99f799e3f59400340b2e47b3b6fef4c4c5e7f8b3b0
+> grade4.dir2/file7	afb02a9f02e751995438f665e176d20ec73fec7bf1b9ebbbd581d4f7192e7fbe
+> grade4.dir2/file8	4462b7611c0b948fd97aea05f90f7950763f783428137019c35c879541d36f5c
+*******************************
+*******************************
+Creating files and directories for plgrep
+*******************************
+*******************************
+Directory listings
+*******************************
+.:
+a
+b
+c
+ddiff
+file
+file1
+file2
+grade4.dir0
+grade4.dir1
+grade4.dir2
+h
+mysha256
+plgrep
+sha1out
+sha1out.sorted
+sha1out1
+sha1out1.sorted
+shadiff1
+shadiff2
+
+./a:
+file3
+
+./b:
+e
+f
+file5
+file6
+
+./b/e:
+
+./b/f:
+file7
+g
+
+./b/f/g:
+file4
+
+./c:
+
+./grade4.dir0:
+a
+b
+grade1
+
+./grade4.dir0/a:
+grade2
+
+./grade4.dir0/b:
+c
+grade3
+
+./grade4.dir0/b/c:
+d
+e
+grade4
+grade4.bin
+grade7
+
+./grade4.dir0/b/c/d:
+grade5
+
+./grade4.dir0/b/c/e:
+f
+grade6
+
+./grade4.dir0/b/c/e/f:
+grade7
+
+./grade4.dir1:
+file1
+file2
+file3
+file4
+file5
+file6
+
+./grade4.dir2:
+file3
+file4
+file5
+file6
+file7
+file8
+
+./h:
+i
+
+./h/i:
+file8
+*******************************
+file
+*******************************
+The cow jumped over the
+mood
+*******************************
+file1
+*******************************
+now
+is
+the
+time
+*******************************
+file2
+*******************************
+when
+is
+now
+*******************************
+a/file3
+*******************************
+the time
+is
+yet
+now the time.
+*******************************
+b/f/g/file4
+*******************************
+time flies
+like
+an arrow
+*******************************
+b/file5
+*******************************
+time
+time
+all I have
+is time
+*******************************
+b/file6
+*******************************
+And then
+in his pregnant
+paper
+*******************************
+b/f/file7
+*******************************
+Hey
+diddle
+diddle
+*******************************
+strings h/i/file8
+*******************************
+/usr/lib/ld.so.1
+__deregister_frame_info
+__register_frame_info
+malloc
+strcmp
+strlen
+.umul
+memcpy
+free
+abort
+memset
+libc.so.1
+_environ
+_GLOBAL_OFFSET_TABLE_
+atexit
+exit
+_DYNAMIC
+printf
+_exit
+_PROCEDURE_LINKAGE_TABLE_
+_lib_version
+environ
+_etext
+_edata
+_end
+SYSVABI_1.3
+What is the time
+I don't know the time
+*******************************
+Executing plgrep time file1 file2 file
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1
+> file1:time
+*******************************
+Executing plgrep -f time file1 file2 file
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1
+> file1
+*******************************
+*******************************
+Executing plgrep time a file1 b file2 c file
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1,7
+> a/file3:now the time.
+> a/file3:the time
+> b/f/g/file4:time flies
+> b/file5:is time
+> b/file5:time
+> b/file5:time
+> file1:time
+*******************************
+*******************************
+Executing plgrep time a file1 b file2 c file h
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1,9
+> a/file3:now the time.
+> a/file3:the time
+> b/f/g/file4:time flies
+> b/file5:is time
+> b/file5:time
+> b/file5:time
+> file1:time
+> h/i/file8:I don't know the time
+> h/i/file8:What is the time
+*******************************
+*******************************
+Executing plgrep -f time a file1 b file2 c file
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1,4
+> a/file3
+> b/f/g/file4
+> b/file5
+> file1
+*******************************
+*******************************
+Executing plgrep -f time a file1 b file2 c file h
+*******************************
+syntax error at /tmp/cs342314829/assign4/plgrep line 35, near "){"
+syntax error at /tmp/cs342314829/assign4/plgrep line 46, near "}"
+Execution of /tmp/cs342314829/assign4/plgrep aborted due to compilation errors.
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+0a1,5
+> a/file3
+> b/f/g/file4
+> b/file5
+> file1
+> h/i/file8
+*******************************
+***** Creating dir1 for ddiff ******
+***** Creating dir2 for ddiff ******
+***** Files in dir1 for ddiff ******
+dir1/file1
+dir1/file2
+dir1/file3
+dir1/file4
+dir1/file5
+dir1/file6
+*******************************
+***** Files in dir2 for ddiff ******
+dir2/file3
+dir2/file4
+dir2/file5
+dir2/file6
+dir2/file7
+dir2/file8
+*******************************
+file4 and file6 are the same in both directories
+*******************************
+
+Executing ddiff dir1 dir2
+*******************************
+<<< file1
+<<< file2
+< file3 >
+> file4 <
+< file5 >
+> file6 <
+>>> file7
+>>> file8
+*******************************
+
+***********Sorted**************
+< file3 >
+< file5 >
+<<< file1
+<<< file2
+> file4 <
+> file6 <
+>>> file7
+>>> file8
+*******************************
+CORRECT
+
+Executing ddiff -s dir1 dir2
+*******************************
+> file4 <
+> file6 <
+*******************************
+
+***********Sorted**************
+> file4 <
+> file6 <
+*******************************
+CORRECT
+
+Executing ddiff -2 dir1 dir2
+*******************************
+< file3 >
+> file4 <
+< file5 >
+> file6 <
+>>> file7
+>>> file8
+*******************************
+
+***********Sorted**************
+< file3 >
+< file5 >
+> file4 <
+> file6 <
+>>> file7
+>>> file8
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+1,4d0
+< < file3 >
+< < file5 >
+< > file4 <
+< > file6 <
+*******************************
+
+Executing ddiff -12 dir1 dir2
+*******************************
+<<< file1
+<<< file2
+< file3 >
+> file4 <
+< file5 >
+> file6 <
+>>> file7
+>>> file8
+*******************************
+
+***********Sorted**************
+< file3 >
+< file5 >
+<<< file1
+<<< file2
+> file4 <
+> file6 <
+>>> file7
+>>> file8
+*******************************
+ERROR
+*******************************
+************ Diff *************
+*******************************
+1,2d0
+< < file3 >
+< < file5 >
+5,6d2
+< > file4 <
+< > file6 <
+*******************************
+
+Executing ddiff -d dir1 dir2
+*******************************
+< file3 >
+< file5 >
+*******************************
+
+***********Sorted**************
+< file3 >
+< file5 >
+*******************************
+CORRECT
+
+Executing ddiff -sd dir1 dir2
+*******************************
+< file3 >
+> file4 <
+< file5 >
+> file6 <
+*******************************
+
+***********Sorted**************
+< file3 >
+< file5 >
+> file4 <
+> file6 <
+*******************************
+CORRECT
+
+*******************************
+*******************************
+SOURCE FILES
+*******************************
+*******************************
+
+
+
+*******************************
+ddiff
+*******************************
+#!/usr/bin/perl -w
+
+# Global variables
+    $dprint = 0;
+    $sprint = 0;
+    $oprint = 0;
+    $tprint = 0;
+    $dir1 = "";
+    $dir2 = "";
+
+# Set flags based on usage
+sub setFlags{
+    $dir1 = $ARGV[1];
+    $dir2 = $ARGV[2];
+    if( index($ARGV[0],"d") > 0){
+        $dprint = 1;
+    }
+    if( index($ARGV[0],"s") > 0){
+        $sprint = 1;
+    }
+    if( index($ARGV[0],"1") > 0){
+        $oprint = 1;
+    }
+    if( index($ARGV[0],"2") > 0){
+        $tprint = 1;
+    }
+}
+
+# Set all flags (default)
+sub setAllFlags{
+    $dprint = 1;
+    $sprint = 1;
+    $oprint = 1;
+    $tprint = 1;
+    $dir1 = $ARGV[0];
+    $dir2 = $ARGV[1];
+}
+
+# Get file list from directory
+sub getFileList{
+    open(DIR,"/bin/ls $_[0] |") || die "Unable to open directory $ARGV[0]: $!\n";
+    @dir = <DIR>;
+    chop @dir;
+    return @dir;
+}
+
+# Check if two file are the same or not
+sub checkIfSameFile{
+    if( -f "$dir1/$_[0]" && -f "$dir2/$_[1]"){             
+        $test = `/usr/bin/diff -q $dir1/$_[0] $dir2/$_[1]`;
+        if($test ne ""){
+            print "< $_[0] >\n" if $dprint == 1 || $oprint == 1 || $tprint == 1;
+        }
+        else{
+            print "> $_[0] <\n" if $sprint == 1 || $oprint == 1 || $tprint == 1;
+        }
+    }else{
+        print "? $_[0]\n" if $dprint == 1 || $oprint == 1 || $tprint == 1;
+    }
+}
+
+# check usage
+die "ddiff [-ds12] <directory1> <directory2>\n" if @ARGV < 2;
+
+# set the flag if necessary
+if(index($ARGV[0],"-") ==0){
+    setFlags();
+}else{
+    setAllFlags();
+}
+
+# open directories and file files
+@Dir1 = getFileList($dir1);
+@Dir2 = getFileList($dir2);
+
+FILE:
+while($file1 = shift @Dir1){
+    foreach $file2 (@Dir2){
+        if($file1 eq $file2){
+            shift @Dir2;
+            checkIfSameFile($file1,$file2);
+            next FILE;
+        }
+    }
+    print "<<< $file1\n" if $oprint == 1;
+}
+
+while ($file = shift @Dir2){
+    print ">>> $file\n" if $tprint == 1;
+} 
+*******************************
+
+
+*******************************
+mysha256
+*******************************
+#!/usr/bin/perl -w
+$dir = $ARGV[0];
+open(DIR,"/bin/ls $dir |") || die "Unable to open directory $ARGV[0]: $!\n";
+open( OUTFILE, "> $ARGV[1]" ) or *OUTFILE = STDOUT;
+
+while ( <DIR> ) {
+  chop;
+  if ( -f "$dir/$_" ) {
+    @output = split(/[ ]+/, `/usr/bin/sha256sum $dir$_`);
+    chop $output[1];
+    print OUTFILE "$output[1]\t$output[0]\n";
+  }
+}
+*******************************
+
+
+*******************************
+plgrep
+*******************************
+#!/usr/bin/perl -w
+die "prog2 [-f] <regxpr> <file/dir list>\n" if @ARGV < 2;
+
+# set the flag if necessary
+$flag = shift;
+if( $flag eq "-f"){
+    $regexpr = shift;
+    $bflag = 1;
+}
+else{
+    $regexpr = $flag;
+    $bflag = 0;
+}
+
+# Get a list of files to search
+while(@ARGV){
+    $arg = shift;
+    if( -d $arg){
+        @fnames = `/usr/bin/find $arg`;
+        foreach $f (@fnames){
+            chop $f;
+            if (-f $f){
+                push(@files,$f);
+            }
+        }
+    }else{
+        push(@files,$arg);
+    }
+}
+
+# Open files in list and search for regex
+while($arg = shift @files){
+    print"$arg\n";
+    if ( -f $arg ) {  which diff
+        if( -T $arg){
+            open(LINES, $arg) or die "could not open $arg to read: $!";
+        }else{
+            @LINES = `/usr/bin/strings $arg`;
+        }
+        while(<LINES>){
+            if(/$regexpr/){
+                push(@{$results{$arg}},$_);
+            }
+        }
+    }
+}
+
+# Print results
+if($bflag == 1){
+    foreach $file (keys(%results)){
+        print "$file\n";
+    }
+}else{
+    foreach $file (keys(%results)){
+        foreach $expr (@{$results{$file}}){
+            print "$file:$expr";
+        }
+    }
+}
+*******************************
+
+Points:
+
+Possible Points:  30
+
+mysha256 Comments:
+
+  1.  No output and errors -10
+
+plgrep Comments:
+
+  1.  Doesn't compile -10
+
+ddiff Comments:
+
+  1.  -2 switch doesn't work -2
+
+  mysha256:        0
+
+  plgrep:          0
+
+  ddiff:           8
+
+
+Total Points:      8
+
+

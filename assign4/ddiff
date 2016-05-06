@@ -1,0 +1,90 @@
+#!/usr/bin/perl -w
+
+# Global variables
+    $dprint = 0;
+    $sprint = 0;
+    $oprint = 0;
+    $tprint = 0;
+    $dir1 = "";
+    $dir2 = "";
+
+# Set flags based on usage
+sub setFlags{
+    $dir1 = $ARGV[1];
+    $dir2 = $ARGV[2];
+    if( index($ARGV[0],"d") > 0){
+        $dprint = 1;
+    }
+    if( index($ARGV[0],"s") > 0){
+        $sprint = 1;
+    }
+    if( index($ARGV[0],"1") > 0){
+        $oprint = 1;
+    }
+    if( index($ARGV[0],"2") > 0){
+        $tprint = 1;
+    }
+}
+
+# Set all flags (default)
+sub setAllFlags{
+    $dprint = 1;
+    $sprint = 1;
+    $oprint = 1;
+    $tprint = 1;
+    $dir1 = $ARGV[0];
+    $dir2 = $ARGV[1];
+}
+
+# Get file list from directory
+sub getFileList{
+    open(DIR,"/bin/ls $_[0] |") || die "Unable to open directory $ARGV[0]: $!\n";
+    @dir = <DIR>;
+    chop @dir;
+    return @dir;
+}
+
+# Check if two file are the same or not
+sub checkIfSameFile{
+    if( -f "$dir1/$_[0]" && -f "$dir2/$_[1]"){             
+        $test = `/usr/bin/diff -q $dir1/$_[0] $dir2/$_[1]`;
+        if($test ne ""){
+            print "< $_[0] >\n" if $dprint == 1 || $oprint == 1 || $tprint == 1;
+        }
+        else{
+            print "> $_[0] <\n" if $sprint == 1 || $oprint == 1 || $tprint == 1;
+        }
+    }else{
+        print "? $_[0]\n" if $dprint == 1 || $oprint == 1 || $tprint == 1;
+    }
+}
+
+# check usage
+die "ddiff [-ds12] <directory1> <directory2>\n" if @ARGV < 2;
+
+# set the flag if necessary
+if(index($ARGV[0],"-") ==0){
+    setFlags();
+}else{
+    setAllFlags();
+}
+
+# open directories and file files
+@Dir1 = getFileList($dir1);
+@Dir2 = getFileList($dir2);
+
+FILE:
+while($file1 = shift @Dir1){
+    foreach $file2 (@Dir2){
+        if($file1 eq $file2){
+            shift @Dir2;
+            checkIfSameFile($file1,$file2);
+            next FILE;
+        }
+    }
+    print "<<< $file1\n" if $oprint == 1;
+}
+
+while ($file = shift @Dir2){
+    print ">>> $file\n" if $tprint == 1;
+} 

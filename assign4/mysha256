@@ -1,0 +1,13 @@
+#!/usr/bin/perl -w
+$dir = $ARGV[0];
+open(DIR,"/bin/ls $dir |") || die "Unable to open directory $ARGV[0]: $!\n";
+open( OUTFILE, "> $ARGV[1]" ) or *OUTFILE = STDOUT;
+
+while ( <DIR> ) {
+  chop;
+  if ( -f "$dir/$_" ) {
+    @output = split(/[ ]+/, `/usr/bin/sha256sum $dir$_`);
+    chop $output[1];
+    print OUTFILE "$output[1]\t$output[0]\n";
+  }
+}
