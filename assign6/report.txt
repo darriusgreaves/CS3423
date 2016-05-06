@@ -1,0 +1,1533 @@
+
+Untarring files in /home/maynard/submit/cs3423/project6/section1/vud447...
+***************************************
+assign6/
+assign6/logprt.h
+assign6/prtlog.h
+assign6/prtlog.c
+assign6/logprt.c
+
+***************************************
+total 20
+-rw------- 1 maynard maynard 3089 Mar 28 13:03 logprt.c
+-rw------- 1 maynard maynard 1197 Mar 28 13:46 logprt.h
+-rw------- 1 maynard maynard 6181 Mar 28 13:41 prtlog.c
+-rw------- 1 maynard maynard 1090 Mar 28 13:46 prtlog.h
+Untarring files in /home/maynard/submit/scripts/cs3423/grade6.headers.tar.gz...
+***************************************
+dnet/
+dnet/ip.h
+dnet/eth.h
+dnet/addr.h
+dnet/fw.h
+dnet/route.h
+dnet/os.h
+dnet/arp.h
+dnet/icmp.h
+dnet/ip6.h
+dnet/udp.h
+dnet/blob.h
+dnet/rand.h
+dnet/intf.h
+dnet/tun.h
+dnet/tcp.h
+dnet.h
+pcap/
+pcap/bluetooth.h
+pcap/usb.h
+pcap/namedb.h
+pcap/pcap.h
+pcap/sll.h
+pcap/vlan.h
+pcap/bpf.h
+pcap-bpf.h
+pcap.h
+pcap-namedb.h
+
+***************************************
+
+*******************************
+*******************************
+Source Files
+*******************************
+*******************************
+
+
+
+*******************************
+logprt.c
+*******************************
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include "logprt.h"
+
+int main (int argc, char * argv[]) {
+    int fdin;    
+
+    /* Check usage */
+    if ( argc != 2 ) {
+        fprintf(stderr,"Usage: logprt <file>\n");
+        exit(-1);
+     }
+ 
+    /* Open file or die */
+    if((fdin = open(argv[1], O_RDONLY)) < 0 ) {
+        perror(argv[1]);
+        exit(-1);
+    }
+  
+    /* Read and print file header information */
+    fileHeaderIO(fdin);
+    
+    /* Read and print the packets */
+    packetIO(fdin);
+    
+    /* Close and exit */
+    close(fdin);
+    exit(0);
+}
+
+
+/* Reads and prints the file header */
+void fileHeaderIO(int fdin) {
+    int n = read(fdin, &h, sizeof(h));
+    if (n != sizeof(h)) {
+        close(fdin);
+        perror("Error Reading pcap file header");
+        exit(-1);
+    }
+
+    printFileType(h.magic);
+    printf("Version major number = %d\n", h.version_major);
+    printf("Version minor number = %d\n", h.version_minor);
+    printf("GMT to local correction = %d\n", h.thiszone);
+    printf("Timestamp accuracy = %d\n", h.sigfigs);
+    printf("Snaplen = %u\n", h.snaplen);
+    printf("Linktype = %d\n\n", h.linktype);  
+}
+
+/* Prints the type of file */
+void printFileType(u_int32_t magic) {
+    if (magic == PCAP_MAGIC)
+        printf("PCAP_MAGIC\n");
+    else if(magic == PCAP_SWAPPED_MAGIC)
+        printf("PCAP_SWAPPED_MAGIC\n");
+    else if(magic == PCAP_MODIFIED_MAGIC)
+        printf("PCAP_MODIFIED_MAGIC\n");
+    else if(magic == PCAP_SWAPPED_MODIFIED_MAGIC)
+        printf("PCAP_SWAPPED_MODIFIED_MAGIC\n");
+    else
+        printf("UNKNOWN FILE TYPE");
+}
+
+/* Reads and prints the packet information */
+void packetIO(int fdin) {
+    int n;
+    while( n = read(fdin, &p, sizeof(p)) == sizeof(p) ) {
+        printPacketHeader();
+        
+        /* skipping over info in packet */
+        lseek(fdin,p.len, SEEK_CUR);
+        printf("\n");
+    }
+
+    if ( n == -1 ) {
+        close(fdin);
+        perror("Write error\n");
+        exit(-1);
+    } else if ( n > 0 ) {
+        printf("Error: Incomplete Record\n");
+    }
+}
+
+
+/* Prints the packet header information*/
+void printPacketHeader(void) {
+    static int count = 0;
+    printf("Packet %d\n", count);
+    printTime();
+    printf("Captured Packet Length = %d\n", p.caplen);
+    printf("Actual Packet Length = %d\n", p.len);
+    count++;
+}
+
+/* Prints the packet time */
+void printTime(void) {
+    static int firsttime = 1;
+    static unsigned int b_sec;
+    static int b_usec;
+    
+    unsigned int c_sec;
+    int c_usec;
+    
+    if(firsttime) {
+        firsttime = 0;
+        b_sec = p.ts.tv_sec;
+        b_usec = p.ts.tv_usec;
+    }
+    
+    c_sec = (unsigned)p.ts.tv_sec - b_sec;
+    c_usec = (unsigned)p.ts.tv_usec - b_usec;
+    
+    while(c_usec < 0) {
+        c_usec += 1000000;
+        c_sec--;
+    }
+    
+    printf("%05u.%06u\n", (unsigned)c_sec, (unsigned)c_usec);
+}
+
+
+*******************************
+prtlog.c
+*******************************
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <unistd.h>
+#include "pcap.h"
+#include "dnet.h"
+#include "prtlog.h"
+
+
+int main (int argc, char * argv[]) {
+    int fdin;
+
+    if ( argc != 2 ) {
+        fprintf(stderr,"Usage: logprt <file>\n");
+        exit(-1);
+     }
+  
+    if((fdin = open(argv[1], O_RDONLY)) < 0 ) {
+        perror(argv[1]);
+        exit(-1);
+    }
+
+    /* Read and print file header information */
+    fileHeaderIO(fdin);
+
+    /* Read and print the packets */
+    packetIO(fdin);
+    
+    close(fdin);
+    exit(0);
+}
+
+/* Reads and prints the file header */
+void fileHeaderIO(int fdin) {
+    struct pcap_file_header h;
+    int n = read(fdin, &h, sizeof(h));
+    if (n != sizeof(h)) {
+        close(fdin);
+        perror("Error Reading pcap file header");
+        exit(-1);
+    }
+
+    printFileType(h.magic);
+    printf("Version major number = %d\n", h.version_major);
+    printf("Version minor number = %d\n", h.version_minor);
+    printf("GMT to local correction = %d\n", h.thiszone);
+    printf("Timestamp accuracy = %d\n", h.sigfigs);
+    printf("Snaplen = %u\n", h.snaplen);
+    printf("Linktype = %d\n\n", h.linktype);    
+}
+
+/* Prints the type of file */
+void printFileType(u_int32_t magic) {
+    if (magic == PCAP_MAGIC)
+        printf("PCAP_MAGIC\n");
+    else if(magic == PCAP_SWAPPED_MAGIC)
+        printf("PCAP_SWAPPED_MAGIC\n");
+    else if(magic == PCAP_MODIFIED_MAGIC)
+        printf("PCAP_MODIFIED_MAGIC\n");
+    else if(magic == PCAP_SWAPPED_MODIFIED_MAGIC)
+        printf("PCAP_SWAPPED_MODIFIED_MAGIC\n");
+    else
+        printf("UNKNOWN FILE TYPE");
+}
+
+/* Reads and prints the packet information */
+void packetIO(int fdin) {
+    int n;
+    while( n = read(fdin, &p, sizeof(p)) == sizeof(p) ) {
+        int m;
+        printPacketHeader();
+        m = ethHeaderIO(fdin); 
+        /* skipping over rest of packet */
+        lseek(fdin,p.len - m, SEEK_CUR);
+        printf("\n");
+    }
+
+    if ( n == -1 ) {
+        close(fdin);
+        perror("Write error\n");
+        exit(-1);
+    } else if ( n > 0 ) {
+        printf("Error: Incomplete Record\n");
+    }
+}
+
+/* Prints the packet header information*/
+void printPacketHeader(void) {
+    static int count = 0;
+    printf("Packet %d\n", count);
+    printTime();
+    printf("Captured Packet Length = %d\n", p.caplen);
+    printf("Actual Packet Length = %d\n", p.len);
+    count++;
+}
+
+/* Prints the packet time */
+void printTime(void) {
+    static int firsttime = 1;
+    static unsigned int b_sec;
+    static int b_usec;
+    
+    unsigned int c_sec;
+    int c_usec;
+    
+    if(firsttime) {
+        firsttime = 0;
+        b_sec = p.ts.tv_sec;
+        b_usec = p.ts.tv_usec;
+    }
+    
+    c_sec = (unsigned)p.ts.tv_sec - b_sec;
+    c_usec = (unsigned)p.ts.tv_usec - b_usec;
+    
+    while(c_usec < 0) {
+        c_usec += 1000000;
+        c_sec--;
+    }
+    
+    printf("%05u.%06u\n", (unsigned)c_sec, (unsigned)c_usec);
+}
+
+
+int ethHeaderIO(int fdin) {
+    struct eth_hdr eh; 
+    int n = read(fdin, &eh, sizeof(eh)); 
+    if(n != sizeof(eh)) {
+        close(fdin);
+        perror("Error Reading packet");
+        exit(-1);
+    }
+
+    printf("Ethernet Header\n");
+    switch(ntohs(eh.eth_type)) {
+        case ETH_TYPE_IP:
+            n += ipHeaderIO(fdin);
+            break;
+        case ETH_TYPE_ARP:
+            n += arpHeaderIO(fdin);
+            break;
+       case ETH_TYPE_PUP:
+            printf("\tPUP\n");
+            break;
+       case ETH_TYPE_REVARP:
+            printf("\tREVARP\n");
+            break;
+       case ETH_TYPE_8021Q:
+            printf("\t8021Q\n");
+            break;
+       case ETH_TYPE_IPV6:
+            printf("\tIPV6\n");
+            break;
+       case ETH_TYPE_MPLS:
+            printf("\tMPLS\n");
+            break;
+       case ETH_TYPE_MPLS_MCAST:
+            printf("\tMPLS_MCAST\n");
+            break;
+       case ETH_TYPE_PPPOEDISC:
+            printf("\tPPPOEDISC\n");
+            break;
+       case ETH_TYPE_PPPOE:
+            printf("\tPPPOE\n");
+            break;
+       case ETH_TYPE_LOOPBACK:
+            printf("\tLOOPBACK\n");
+            break;
+       default:
+            printf("\tUNRECOGNIZED\n");
+    }
+    return n;
+}
+
+
+/* Reads the arp header information */
+int arpHeaderIO(int fdin) {
+    struct arp_hdr ah;
+    int n = read(fdin, &ah, sizeof(ah)); 
+    if(n != sizeof(ah)) {
+        close(fdin);
+        perror("Error Reading packet");
+        exit(-1);
+    }
+    printArpOp(ah.ar_op);
+    return n;
+}
+
+/* Prints the arp operation type */
+void printArpOp(uint16_t arpOp) {
+    printf("\tARP\n");
+    switch(ntohs(arpOp)) {
+        case ARP_OP_REQUEST:
+            printf("\t\tarp operation = Arp Request\n");
+            break;
+        case ARP_OP_REPLY:
+            printf("\t\tarp operation = Arp Reply\n");
+            break;
+        case ARP_OP_REVREQUEST:
+            printf("\t\tarp operation = Arp Reverse Request\n");
+            break;
+        case ARP_OP_REVREPLY:
+            printf("\t\tarp operation = Arp Reverse Reply\n");
+            break;
+        default:
+            printf("\t\tarp operation = UNRECOGNIZED\n");
+            break;
+    }
+}
+
+/* Reads the ip header information */
+int ipHeaderIO(int fdin) {
+    struct ip_hdr iph;
+    int n = read(fdin, &iph, sizeof(iph)); 
+    if(n != sizeof(iph)) {
+        close(fdin);
+        perror("Error reading ip header");
+        exit(-1);
+    }
+    printIpProtocal(iph.ip_p);
+    return n;
+}
+
+
+/* Prints the ip protocol type */
+void printIpProtocal(uint8_t protocol) {
+    printf("\tIP\n");
+    switch(protocol) {
+        case IP_PROTO_ICMP:
+            printf("\t\tICMP\n");
+            break;
+        case IP_PROTO_IGMP:
+            printf("\t\tIGMP\n");
+            break;
+        case IP_PROTO_TCP:
+            printf("\t\tTCP\n");
+            break;
+        case IP_PROTO_UDP:
+            printf("\t\tUDP\n");
+            break;
+        default:
+            printf("\t\tUNRECOGNIZED\n");
+            break;
+    }
+}
+
+
+***************************************
+gcc logprt.c -o logprt
+***************************************
+gcc prtlog.c -o prtlog
+
+
+**************************************
+                After Compile             
+total 88
+drwx--x--x 2 maynard maynard  4096 Oct 22  2010 dnet
+-rw------- 1 maynard maynard   520 Oct 22  2010 dnet.h
+-rwx--x--x 1 maynard maynard 13616 Mar 29 08:59 logprt
+-rw------- 1 maynard maynard  3089 Mar 28 13:03 logprt.c
+-rw------- 1 maynard maynard   114 Mar 29 08:59 logprt.c.out
+-rw------- 1 maynard maynard  1197 Mar 28 13:46 logprt.h
+drwx--x--x 2 maynard maynard  4096 Mar  6  2011 pcap
+-rw------- 1 maynard maynard  2393 Oct 22  2010 pcap-bpf.h
+-rw------- 1 maynard maynard  2125 Oct 22  2010 pcap-namedb.h
+-rw------- 1 maynard maynard  2320 Oct 22  2010 pcap.h
+-rwx--x--x 1 maynard maynard 16583 Mar 29 08:59 prtlog
+-rw------- 1 maynard maynard  6181 Mar 28 13:41 prtlog.c
+-rw------- 1 maynard maynard   114 Mar 29 08:59 prtlog.c.out
+-rw------- 1 maynard maynard  1090 Mar 28 13:46 prtlog.h
+**************************************
+
+
+**************************************
+logprt Test
+**************************************
+Executing ./logprt /home/maynard/submit/scripts/cs3423/grade6.log
+********* /usr/bin/valgrind ./logprt /home/maynard/submit/scripts/cs3423/grade6.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 110
+Actual Packet Length = 110
+
+Packet 1
+00006.972069
+Captured Packet Length = 110
+Actual Packet Length = 110
+
+Packet 2
+00056.959459
+Captured Packet Length = 91
+Actual Packet Length = 91
+
+Packet 3
+00063.958774
+Captured Packet Length = 91
+Actual Packet Length = 91
+
+Packet 4
+321679.647919
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 5
+321679.767661
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 6
+321679.767762
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 7
+321679.768338
+Captured Packet Length = 66
+Actual Packet Length = 66
+
+Packet 8
+321679.975469
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 9
+321679.975543
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 10
+321679.976120
+Captured Packet Length = 66
+Actual Packet Length = 66
+
+Packet 11
+200164.100215
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 12
+200164.370809
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 13
+200169.099244
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 14
+200169.099256
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 15
+201120.023578
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 16
+201120.332865
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 17
+201120.333098
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 18
+31174915.712809
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 19
+31174916.110194
+Captured Packet Length = 92
+Actual Packet Length = 92
+
+Packet 20
+31174917.293933
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 21
+31174918.914848
+Captured Packet Length = 315
+Actual Packet Length = 315
+
+Packet 22
+31174918.951009
+Captured Packet Length = 243
+Actual Packet Length = 243
+
+Packet 23
+31176266.408516
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 24
+31176266.408907
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 25
+31176267.408359
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 26
+31176267.408757
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6555== Memcheck, a memory error detector
+==6555== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6555== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6555== Command: ./logprt /home/maynard/submit/scripts/cs3423/grade6.log
+==6555== 
+==6555== 
+==6555== HEAP SUMMARY:
+==6555==     in use at exit: 0 bytes in 0 blocks
+==6555==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6555== 
+==6555== All heap blocks were freed -- no leaks are possible
+==6555== 
+==6555== For counts of detected and suppressed errors, rerun with: -v
+==6555== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./logprt /home/maynard/submit/scripts/cs3423/grade6.udp.log
+********* /usr/bin/valgrind ./logprt /home/maynard/submit/scripts/cs3423/grade6.udp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 110
+Actual Packet Length = 110
+
+Packet 1
+00006.972069
+Captured Packet Length = 110
+Actual Packet Length = 110
+
+Packet 2
+00056.959459
+Captured Packet Length = 91
+Actual Packet Length = 91
+
+Packet 3
+00063.958774
+Captured Packet Length = 91
+Actual Packet Length = 91
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6560== Memcheck, a memory error detector
+==6560== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6560== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6560== Command: ./logprt /home/maynard/submit/scripts/cs3423/grade6.udp.log
+==6560== 
+==6560== 
+==6560== HEAP SUMMARY:
+==6560==     in use at exit: 0 bytes in 0 blocks
+==6560==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6560== 
+==6560== All heap blocks were freed -- no leaks are possible
+==6560== 
+==6560== For counts of detected and suppressed errors, rerun with: -v
+==6560== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./logprt /home/maynard/submit/scripts/cs3423/grade6.iparp.log
+********* /usr/bin/valgrind ./logprt /home/maynard/submit/scripts/cs3423/grade6.iparp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 1
+00000.119742
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 2
+00000.119843
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 3
+00000.120419
+Captured Packet Length = 66
+Actual Packet Length = 66
+
+Packet 4
+00000.327550
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 5
+00000.327624
+Captured Packet Length = 114
+Actual Packet Length = 114
+
+Packet 6
+00000.328201
+Captured Packet Length = 66
+Actual Packet Length = 66
+
+Packet 7
+4294845780.452296
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 8
+4294845780.722890
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 9
+4294845785.451325
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 10
+4294845785.451337
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 11
+4294846736.375659
+Captured Packet Length = 90
+Actual Packet Length = 90
+
+Packet 12
+4294846736.684946
+Captured Packet Length = 42
+Actual Packet Length = 42
+
+Packet 13
+4294846736.685179
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6565== Memcheck, a memory error detector
+==6565== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6565== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6565== Command: ./logprt /home/maynard/submit/scripts/cs3423/grade6.iparp.log
+==6565== 
+==6565== 
+==6565== HEAP SUMMARY:
+==6565==     in use at exit: 0 bytes in 0 blocks
+==6565==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6565== 
+==6565== All heap blocks were freed -- no leaks are possible
+==6565== 
+==6565== For counts of detected and suppressed errors, rerun with: -v
+==6565== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./logprt /home/maynard/submit/scripts/cs3423/grade6.icmp.log
+********* /usr/bin/valgrind ./logprt /home/maynard/submit/scripts/cs3423/grade6.icmp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 1
+00000.000391
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 2
+00000.999843
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+Packet 3
+00001.000241
+Captured Packet Length = 98
+Actual Packet Length = 98
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6570== Memcheck, a memory error detector
+==6570== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6570== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6570== Command: ./logprt /home/maynard/submit/scripts/cs3423/grade6.icmp.log
+==6570== 
+==6570== 
+==6570== HEAP SUMMARY:
+==6570==     in use at exit: 0 bytes in 0 blocks
+==6570==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6570== 
+==6570== All heap blocks were freed -- no leaks are possible
+==6570== 
+==6570== For counts of detected and suppressed errors, rerun with: -v
+==6570== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./logprt /home/maynard/submit/scripts/cs3423/grade6.nonip.log
+********* /usr/bin/valgrind ./logprt /home/maynard/submit/scripts/cs3423/grade6.nonip.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 1
+00000.397385
+Captured Packet Length = 92
+Actual Packet Length = 92
+
+Packet 2
+00001.581124
+Captured Packet Length = 60
+Actual Packet Length = 60
+
+Packet 3
+00003.202039
+Captured Packet Length = 315
+Actual Packet Length = 315
+
+Packet 4
+00003.238200
+Captured Packet Length = 243
+Actual Packet Length = 243
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6575== Memcheck, a memory error detector
+==6575== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6575== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6575== Command: ./logprt /home/maynard/submit/scripts/cs3423/grade6.nonip.log
+==6575== 
+==6575== 
+==6575== HEAP SUMMARY:
+==6575==     in use at exit: 0 bytes in 0 blocks
+==6575==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6575== 
+==6575== All heap blocks were freed -- no leaks are possible
+==6575== 
+==6575== For counts of detected and suppressed errors, rerun with: -v
+==6575== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+
+
+**************************************
+prtlog Test
+**************************************
+Executing ./prtlog /home/maynard/submit/scripts/cs3423/grade6.log
+********* /usr/bin/valgrind ./prtlog /home/maynard/submit/scripts/cs3423/grade6.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 110
+Actual Packet Length = 110
+Ethernet Header
+	IP
+		UDP
+
+Packet 1
+00006.972069
+Captured Packet Length = 110
+Actual Packet Length = 110
+Ethernet Header
+	IP
+		UDP
+
+Packet 2
+00056.959459
+Captured Packet Length = 91
+Actual Packet Length = 91
+Ethernet Header
+	IP
+		UDP
+
+Packet 3
+00063.958774
+Captured Packet Length = 91
+Actual Packet Length = 91
+Ethernet Header
+	IP
+		UDP
+
+Packet 4
+321679.647919
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+Packet 5
+321679.767661
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 6
+321679.767762
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 7
+321679.768338
+Captured Packet Length = 66
+Actual Packet Length = 66
+Ethernet Header
+	IP
+		TCP
+
+Packet 8
+321679.975469
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 9
+321679.975543
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 10
+321679.976120
+Captured Packet Length = 66
+Actual Packet Length = 66
+Ethernet Header
+	IP
+		TCP
+
+Packet 11
+200164.100215
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 12
+200164.370809
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 13
+200169.099244
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 14
+200169.099256
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+Packet 15
+201120.023578
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 16
+201120.332865
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 17
+201120.333098
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+Packet 18
+31174915.712809
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 19
+31174916.110194
+Captured Packet Length = 92
+Actual Packet Length = 92
+Ethernet Header
+	IP
+		UDP
+
+Packet 20
+31174917.293933
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	UNRECOGNIZED
+
+Packet 21
+31174918.914848
+Captured Packet Length = 315
+Actual Packet Length = 315
+Ethernet Header
+	IP
+		UDP
+
+Packet 22
+31174918.951009
+Captured Packet Length = 243
+Actual Packet Length = 243
+Ethernet Header
+	IP
+		UDP
+
+Packet 23
+31176266.408516
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 24
+31176266.408907
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 25
+31176267.408359
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 26
+31176267.408757
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6580== Memcheck, a memory error detector
+==6580== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6580== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6580== Command: ./prtlog /home/maynard/submit/scripts/cs3423/grade6.log
+==6580== 
+==6580== 
+==6580== HEAP SUMMARY:
+==6580==     in use at exit: 0 bytes in 0 blocks
+==6580==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6580== 
+==6580== All heap blocks were freed -- no leaks are possible
+==6580== 
+==6580== For counts of detected and suppressed errors, rerun with: -v
+==6580== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./prtlog /home/maynard/submit/scripts/cs3423/grade6.udp.log
+********* /usr/bin/valgrind ./prtlog /home/maynard/submit/scripts/cs3423/grade6.udp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 110
+Actual Packet Length = 110
+Ethernet Header
+	IP
+		UDP
+
+Packet 1
+00006.972069
+Captured Packet Length = 110
+Actual Packet Length = 110
+Ethernet Header
+	IP
+		UDP
+
+Packet 2
+00056.959459
+Captured Packet Length = 91
+Actual Packet Length = 91
+Ethernet Header
+	IP
+		UDP
+
+Packet 3
+00063.958774
+Captured Packet Length = 91
+Actual Packet Length = 91
+Ethernet Header
+	IP
+		UDP
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6585== Memcheck, a memory error detector
+==6585== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6585== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6585== Command: ./prtlog /home/maynard/submit/scripts/cs3423/grade6.udp.log
+==6585== 
+==6585== 
+==6585== HEAP SUMMARY:
+==6585==     in use at exit: 0 bytes in 0 blocks
+==6585==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6585== 
+==6585== All heap blocks were freed -- no leaks are possible
+==6585== 
+==6585== For counts of detected and suppressed errors, rerun with: -v
+==6585== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./prtlog /home/maynard/submit/scripts/cs3423/grade6.iparp.log
+********* /usr/bin/valgrind ./prtlog /home/maynard/submit/scripts/cs3423/grade6.iparp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+Packet 1
+00000.119742
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 2
+00000.119843
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 3
+00000.120419
+Captured Packet Length = 66
+Actual Packet Length = 66
+Ethernet Header
+	IP
+		TCP
+
+Packet 4
+00000.327550
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 5
+00000.327624
+Captured Packet Length = 114
+Actual Packet Length = 114
+Ethernet Header
+	IP
+		TCP
+
+Packet 6
+00000.328201
+Captured Packet Length = 66
+Actual Packet Length = 66
+Ethernet Header
+	IP
+		TCP
+
+Packet 7
+4294845780.452296
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 8
+4294845780.722890
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 9
+4294845785.451325
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 10
+4294845785.451337
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+Packet 11
+4294846736.375659
+Captured Packet Length = 90
+Actual Packet Length = 90
+Ethernet Header
+	IP
+		UDP
+
+Packet 12
+4294846736.684946
+Captured Packet Length = 42
+Actual Packet Length = 42
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 13
+4294846736.685179
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Reply
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6590== Memcheck, a memory error detector
+==6590== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6590== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6590== Command: ./prtlog /home/maynard/submit/scripts/cs3423/grade6.iparp.log
+==6590== 
+==6590== 
+==6590== HEAP SUMMARY:
+==6590==     in use at exit: 0 bytes in 0 blocks
+==6590==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6590== 
+==6590== All heap blocks were freed -- no leaks are possible
+==6590== 
+==6590== For counts of detected and suppressed errors, rerun with: -v
+==6590== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./prtlog /home/maynard/submit/scripts/cs3423/grade6.icmp.log
+********* /usr/bin/valgrind ./prtlog /home/maynard/submit/scripts/cs3423/grade6.icmp.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 1
+00000.000391
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 2
+00000.999843
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+Packet 3
+00001.000241
+Captured Packet Length = 98
+Actual Packet Length = 98
+Ethernet Header
+	IP
+		ICMP
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6595== Memcheck, a memory error detector
+==6595== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6595== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6595== Command: ./prtlog /home/maynard/submit/scripts/cs3423/grade6.icmp.log
+==6595== 
+==6595== 
+==6595== HEAP SUMMARY:
+==6595==     in use at exit: 0 bytes in 0 blocks
+==6595==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6595== 
+==6595== All heap blocks were freed -- no leaks are possible
+==6595== 
+==6595== For counts of detected and suppressed errors, rerun with: -v
+==6595== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+Executing ./prtlog /home/maynard/submit/scripts/cs3423/grade6.nonip.log
+********* /usr/bin/valgrind ./prtlog /home/maynard/submit/scripts/cs3423/grade6.nonip.log 1> fileout 2> valout *******
+PCAP_MAGIC
+Version major number = 2
+Version minor number = 4
+GMT to local correction = 0
+Timestamp accuracy = 0
+Snaplen = 65535
+Linktype = 1
+
+Packet 0
+00000.000000
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	ARP
+		arp operation = Arp Request
+
+Packet 1
+00000.397385
+Captured Packet Length = 92
+Actual Packet Length = 92
+Ethernet Header
+	IP
+		UDP
+
+Packet 2
+00001.581124
+Captured Packet Length = 60
+Actual Packet Length = 60
+Ethernet Header
+	UNRECOGNIZED
+
+Packet 3
+00003.202039
+Captured Packet Length = 315
+Actual Packet Length = 315
+Ethernet Header
+	IP
+		UDP
+
+Packet 4
+00003.238200
+Captured Packet Length = 243
+Actual Packet Length = 243
+Ethernet Header
+	IP
+		UDP
+
+********* End stdout *******
+********* Valgrind output (valout) *******
+==6600== Memcheck, a memory error detector
+==6600== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==6600== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==6600== Command: ./prtlog /home/maynard/submit/scripts/cs3423/grade6.nonip.log
+==6600== 
+==6600== 
+==6600== HEAP SUMMARY:
+==6600==     in use at exit: 0 bytes in 0 blocks
+==6600==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==6600== 
+==6600== All heap blocks were freed -- no leaks are possible
+==6600== 
+==6600== For counts of detected and suppressed errors, rerun with: -v
+==6600== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+********* End of Valgrind output file *********
+
+
+Computing diff....
+Diff error return = 0
+CORRECT
+
+
+
+Points:
+
+Possible Points:  30
+
+Comments:
+
+  1.  You cannot read header by header because the data in the
+      header is not necessarily valid.  You MUST read in an
+      entire packet and then set pointers at header sites as
+      you look at the headers.  When reaching an unrecognized
+      protocol then you read the next packet! -5
+
+Total Points:     25
+
+
