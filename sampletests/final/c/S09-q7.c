@@ -64,8 +64,8 @@ int main(int argc, char *argv[]){
 				parent = 0;
 				break;
 			default:
-			    parent = 1;
-			    break;
+				parent = 1;
+				break;
 		}
 
 		// children break out of fork-loop
@@ -75,27 +75,27 @@ int main(int argc, char *argv[]){
 	}
 
 	// parent reads all messages sent from children
-    if(parent == 1){
-    	// close all pipes for children
-    	for(i = 0; i < numChildren; i++){
-    		close(pipes[i][0]);
-    		close(pipes[i][1]);
-    	}
+	if(parent == 1){
+		// close all pipes for children
+		for(i = 0; i < numChildren; i++){
+			close(pipes[i][0]);
+			close(pipes[i][1]);
+		}
 
-    	// parent closes its write end
-    	close(pipes[numChildren][1]);
+		// parent closes its write end
+		close(pipes[numChildren][1]);
 
-    	//read and print messages
-        while(read(pipes[numChildren][0], &msg, sizeof(msg)) == sizeof(msg)){		
+		//read and print messages
+		while(read(pipes[numChildren][0], &msg, sizeof(msg)) == sizeof(msg)){		
 			printf("Process %d received message from Process %d\n", msg.my_pid, msg.received_pid);
 			fflush(stdout);
-   		}
+		}
 
-   		// close read end and exit
-   		close(pipes[numChildren][0]);
-   		exit(0);
-    }
-    else{
+		// close read end and exit
+		close(pipes[numChildren][0]);
+		exit(0);
+	}
+	else{
 		//  child closes read end of all pipes except its own
 		for(i = 0; i < numChildren + 1; i++){
 			if(idx != i){
@@ -105,36 +105,36 @@ int main(int argc, char *argv[]){
 
 		// child gets its proces id from kernel
 		pidTemp = getpid();
-	   
-	   // If process id is odd ( and not original process), child writes its messages
-	   	if(pidTemp%2){
-	   		for(i = 0; i < numChildren; i++){
-	   			if(idx != i){
-	   				if(write(pipes[i][1], &(pidTemp), sizeof(pidTemp)) != sizeof(pidTemp)){
-	   					perror("write");
-	   					exit(-1);
-	   				}
-	   			}
-	   		}
-	   	}
-	   
-	   // close write ends of pipes of all children
-	   	for(i = 0; i < numChildren; i++) {
-	   			close(pipes[i][1]);
-	   	}
 
-	   	// child then send recieved messages to parent
-	   	msg.my_pid = pidTemp;
-	   	while(read(pipes[idx][0], &(msg.received_pid), sizeof(msg.received_pid)) == sizeof(msg.received_pid)){		
+		// If process id is odd ( and not original process), child writes its messages
+		if(pidTemp%2){
+			for(i = 0; i < numChildren; i++){
+				if(idx != i){
+					if(write(pipes[i][1], &(pidTemp), sizeof(pidTemp)) != sizeof(pidTemp)){
+						perror("write");
+						exit(-1);
+					}
+				}
+			}
+		}
+
+		// close write ends of pipes of all children
+		for(i = 0; i < numChildren; i++) {
+				close(pipes[i][1]);
+		}
+
+		// child then send recieved messages to parent
+		msg.my_pid = pidTemp;
+		while(read(pipes[idx][0], &(msg.received_pid), sizeof(msg.received_pid)) == sizeof(msg.received_pid)){		
 			if(write(pipes[numChildren][1], &msg, sizeof(msg)) != sizeof(msg)){
 				perror("child write to parent");
 				exit(-1);
 			}
-	   	}
+		}
 
-	   	// child closes remaining open pipes
-	   	close(pipes[numChildren][1]);
-	   	close(pipes[idx][0]);
+		// child closes remaining open pipes
+		close(pipes[numChildren][1]);
+		close(pipes[idx][0]);
 		exit(0);	
 	}
 }
