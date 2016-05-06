@@ -1,0 +1,620 @@
+
+assign7/
+assign7/netsim-1.0.tar.gz
+
+netsim-1.0/
+netsim-1.0/netsim.c
+netsim-1.0/depcomp
+netsim-1.0/missing
+netsim-1.0/INSTALL
+netsim-1.0/Makefile.in
+netsim-1.0/configure.in
+netsim-1.0/aclocal.m4
+netsim-1.0/ChangeLog
+netsim-1.0/COPYING
+netsim-1.0/configure
+netsim-1.0/AUTHORS
+netsim-1.0/install-sh
+netsim-1.0/NEWS
+netsim-1.0/compile
+netsim-1.0/README
+netsim-1.0/Makefile.am
+test -z "netsim" || rm -f netsim
+rm -f *.o
+gcc -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"netsim\" -DVERSION=\"1.0\" -I.     -g -O2 -MT netsim.o -MD -MP -MF .deps/netsim.Tpo -c -o netsim.o netsim.c
+mv -f .deps/netsim.Tpo .deps/netsim.Po
+gcc  -g -O2   -o netsim netsim.o  
+
+*******************************
+*******************************
+SOURCE FILES
+*******************************
+*******************************
+
+
+
+*******************************
+netsim.c
+*******************************
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
+
+#define TRUE		1
+#define FALSE		0
+
+#define	MSG_MAX		10
+#define NUM_WRITES	9
+#define NUM_PROCS	10
+
+#define DEAD_PROC	-1
+
+
+
+/* Globals*/
+// stores the id of the process 
+int my_proc_num;
+//stores the pipes of every process involved
+int proc_pipes[NUM_PROCS][2];  
+
+/* Create the rand index array*/
+void generateRandIndxArray(int indx, int *array) {
+    int i, j, rng, num;
+
+    rng = RAND_MAX/NUM_PROCS;
+    rng *= NUM_PROCS;
+    for (i = 0; i < NUM_WRITES; i++) {
+        do {
+            num = rand();
+            j = num % NUM_PROCS;
+        }
+        while (num >= rng || indx == j);
+        array[i] = j;
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    pid_t child_pid;
+    pid_t my_children[NUM_PROCS]; 
+
+    int recipient;
+    char text[MSG_MAX];
+
+    int i, ret, fd[2];
+
+    // create the pipe for main - checking if pipeing works
+    if((ret = pipe(fd)) < 0) {
+    	perror("cannot create pipes");
+    	exit(-1);
+    }
+
+    // initialize process id
+    my_proc_num = -1;
+
+    // initialize the pipes for the processes
+    for(i = 0; i < NUM_PROCS; i++) {
+    	if((ret = pipe(proc_pipes[i])) < 0) {
+    		perror("error creating pipe");
+    		exit(-1);
+    	}
+    }
+
+    // fork other processes [1 ... NUM_PROCS]
+************************************************************
+Counting the original process that makes 11 not 10
+************************************************************
+    for(i = 0; i < NUM_PROCS; i++) {
+************************************************************
+Incorrect comment
+************************************************************
+    	// set the child process number
+************************************************************
+So first child's index is going to be 0???
+Original process was supposed to be 0
+************************************************************
+    	my_proc_num++;
+************************************************************
+Remove
+************************************************************
+    	printf("process%d\n", my_proc_num);
+    	fflush(stdout);
+
+    	child_pid = fork();
+    	if(child_pid ==-1){
+    		perror("fork");
+    		exit(-1);
+    	}
+    	else if(!child_pid) {
+************************************************************
+Notice that in order to have the original process also executed
+this code you will need to duplicate the code in the common
+code.
+************************************************************
+    		// child here
+    		int j;
+    		int randArr[NUM_WRITES];
+    		
+************************************************************
+No!!!!
+************************************************************
+    		sleep(1);
+
+    		// close unused pipes read sides
+    		for(j = 0; j < NUM_PROCS; j++) {
+    			if(j != my_proc_num){
+    				close(proc_pipes[j][0]);
+    			}
+    		}
+
+    		// find out who I will send messages to
+************************************************************
+So you are really using i as your index and not my_proc_num
+as documented in your code!
+************************************************************
+    		srand(1921739 * i);
+        	generateRandIndxArray(i, randArr);
+
+        	// produce some messages
+        	for(j = 0; j < NUM_WRITES; j++) {
+        		sleep(1);
+
+        		// get the recipient
+        		recipient = randArr[j];
+
+        		// prepare the message
+************************************************************
+But your process id is i not my_proc_num so your message
+is incorrect!
+************************************************************
+        		snprintf(text, MSG_MAX, "process%d", my_proc_num);
+        		ret = write(proc_pipes[recipient][1], text, MSG_MAX);
+        		
+        	}
+
+        	// now read all messages sent to me
+        	while(1) {
+        		char buf[MSG_MAX];
+        		ret = read(proc_pipes[my_proc_num][0], &buf, MSG_MAX);
+        		if(ret < 0) {
+        			// bad message
+        			//printf(" did not get a message\n");
+        			break;
+        		}
+
+************************************************************
+So when you hit the EOF (ret == 0) (assuming that you do since
+you may not be closing the write ends) you simply reprint the
+last message. AND KEEP DOING THIS.
+************************************************************
+       			// good message, print it
+       			printf("process%d has received a message from %s\n", my_proc_num, buf);
+************************************************************
+NO!!!!
+************************************************************
+       			sleep(1);
+       			fflush(stdout);
+        	}
+
+        	// now child can exit
+************************************************************
+NO!!!!
+************************************************************
+        	sleep(1);
+        	close(proc_pipes[my_proc_num][0]);
+        	//printf("%d has exited\n", my_proc_num);
+        	exit(0);
+        }
+
+        // mark the childs pid 
+        my_children[my_proc_num] = child_pid;
+
+        // close my read end
+************************************************************
+NO!!!!!!!!!!!
+************************************************************
+        sleep(2*my_proc_num+1);
+        close(proc_pipes[my_proc_num][0]);
+
+        
+    }
+
+    // all done?
+    //printf("terminating all processes\n");
+    for(i = 0; i < NUM_PROCS; i++) {
+    	//printf("%d ", my_children[i]);
+    	if(my_children[i] != -1){
+    		kill(my_children[i], SIGTERM);
+    	}
+    }
+    //printf("Done!\n");
+    return 0;
+}
+make: Nothing to be done for `all'.
+total 424
+-rw------- 1 maynard maynard      0 Apr 13 13:03 AUTHORS
+-rw------- 1 maynard maynard  35147 Jan  2  2014 COPYING
+-rw------- 1 maynard maynard      0 Apr 13 13:03 ChangeLog
+-rw------- 1 maynard maynard  15752 Jan  2  2014 INSTALL
+-rw------- 1 maynard maynard  22992 Apr 19 08:19 Makefile
+-rw------- 1 maynard maynard     48 Apr 13 12:59 Makefile.am
+-rw------- 1 maynard maynard  23083 Apr 13 13:04 Makefile.in
+-rw------- 1 maynard maynard      0 Apr 13 13:03 NEWS
+-rw------- 1 maynard maynard      0 Apr 13 13:03 README
+-rw------- 1 maynard maynard  41927 Apr 13 13:03 aclocal.m4
+-rwx--x--x 1 maynard maynard   7333 Jan  2  2014 compile
+-rw------- 1 maynard maynard   8515 Apr 19 08:19 config.log
+-rwx--x--x 1 maynard maynard  28826 Apr 19 08:19 config.status
+-rwx--x--x 1 maynard maynard 140638 Apr 13 13:03 configure
+-rw------- 1 maynard maynard     95 Apr 13 13:03 configure.in
+-rwx--x--x 1 maynard maynard  23566 Jan  2  2014 depcomp
+-rwx--x--x 1 maynard maynard  13997 Jan  2  2014 install-sh
+-rwx--x--x 1 maynard maynard   6872 Jan  2  2014 missing
+-rwx--x--x 1 maynard maynard  13955 Apr 19 08:19 netsim
+-rw------- 1 maynard maynard   3423 Apr 13 11:46 netsim.c
+-rw------- 1 maynard maynard  11440 Apr 19 08:19 netsim.o
+cc succeeded
+Executing netsim on several inputs ...
+process0
+process1
+process2
+process3
+process1 has received a message from process2
+process1 has received a message from process2
+process2 has received a message from process1
+process4
+process2 has received a message from process1
+process2 has received a message from process0
+process2 has received a message from process3
+process2 has received a message from process3
+process0 has received a message from process4
+process3 has received a message from process0
+process3 has received a message from process0
+process3 has received a message from process2
+process3 has received a message from process4
+process3 has received a message from process4
+process5
+process3 has received a message from process4
+process4 has received a message from process1
+process4 has received a message from process5
+process1 has received a message from process5
+process0 has received a message from process5
+process1 has received a message from process5
+process6
+process0 has received a message from process5
+process5 has received a message from process1
+process5 has received a message from process0
+process5 has received a message from process1
+process5 has received a message from process0
+process5 has received a message from process2
+process5 has received a message from process3
+process0 has received a message from process6
+process5 has received a message from process3
+process4 has received a message from process6
+process5 has received a message from process3
+process1 has received a message from process6
+process5 has received a message from process6
+process2 has received a message from process6
+process3 has received a message from process6
+process0 has received a message from process6
+process6 has received a message from process0
+process6 has received a message from process2
+process7
+process6 has received a message from process0
+process6 has received a message from process1
+process6 has received a message from process3
+process6 has received a message from process5
+process3 has received a message from process7
+process6 has received a message from process7
+process3 has received a message from process7
+process4 has received a message from process7
+process5 has received a message from process7
+process5 has received a message from process7
+process7 has received a message from process0
+process5 has received a message from process7
+process7 has received a message from process1
+process7 has received a message from process3
+process7 has received a message from process2
+process8
+process7 has received a message from process3
+process7 has received a message from process4
+process7 has received a message from process5
+process2 has received a message from process8
+process7 has received a message from process5
+process2 has received a message from process8
+process7 has received a message from process8
+process7 has received a message from process8
+process2 has received a message from process8
+process3 has received a message from process8
+process7 has received a message from process8
+process5 has received a message from process8
+process8 has received a message from process1
+process7 has received a message from process8
+process8 has received a message from process1
+process8 has received a message from process4
+process8 has received a message from process6
+process8 has received a message from process6
+process8 has received a message from process7
+process9
+process8 has received a message from process7
+process8 has received a message from process9
+process5 has received a message from process9
+process1 has received a message from process9
+process3 has received a message from process9
+process0 has received a message from process9
+process6 has received a message from process9
+process1 has received a message from process9
+process1 has received a message from process9
+process9 has received a message from process2
+process3 has received a message from process9
+process9 has received a message from process0
+process9 has received a message from process2
+process9 has received a message from process2
+process9 has received a message from process3
+process9 has received a message from process4
+process9 has received a message from process4
+process9 has received a message from process4
+Number of Messages from netsim
+99 ./msgs
+Sorting messages ...
+ERROR - Message Generation is Incorrect
+********* User sorted messages *********
+process0
+process0 has received a message from process4
+process0 has received a message from process5
+process0 has received a message from process5
+process0 has received a message from process6
+process0 has received a message from process6
+process0 has received a message from process9
+process1
+process1 has received a message from process2
+process1 has received a message from process2
+process1 has received a message from process5
+process1 has received a message from process5
+process1 has received a message from process6
+process1 has received a message from process9
+process1 has received a message from process9
+process1 has received a message from process9
+process2
+process2 has received a message from process0
+process2 has received a message from process1
+process2 has received a message from process1
+process2 has received a message from process3
+process2 has received a message from process3
+process2 has received a message from process6
+process2 has received a message from process8
+process2 has received a message from process8
+process2 has received a message from process8
+process3
+process3 has received a message from process0
+process3 has received a message from process0
+process3 has received a message from process2
+process3 has received a message from process4
+process3 has received a message from process4
+process3 has received a message from process4
+process3 has received a message from process6
+process3 has received a message from process7
+process3 has received a message from process7
+process3 has received a message from process8
+process3 has received a message from process9
+process3 has received a message from process9
+process4
+process4 has received a message from process1
+process4 has received a message from process5
+process4 has received a message from process6
+process4 has received a message from process7
+process5
+process5 has received a message from process0
+process5 has received a message from process0
+process5 has received a message from process1
+process5 has received a message from process1
+process5 has received a message from process2
+process5 has received a message from process3
+process5 has received a message from process3
+process5 has received a message from process3
+process5 has received a message from process6
+process5 has received a message from process7
+process5 has received a message from process7
+process5 has received a message from process7
+process5 has received a message from process8
+process5 has received a message from process9
+process6
+process6 has received a message from process0
+process6 has received a message from process0
+process6 has received a message from process1
+process6 has received a message from process2
+process6 has received a message from process3
+process6 has received a message from process5
+process6 has received a message from process7
+process6 has received a message from process9
+process7
+process7 has received a message from process0
+process7 has received a message from process1
+process7 has received a message from process2
+process7 has received a message from process3
+process7 has received a message from process3
+process7 has received a message from process4
+process7 has received a message from process5
+process7 has received a message from process5
+process7 has received a message from process8
+process7 has received a message from process8
+process7 has received a message from process8
+process7 has received a message from process8
+process8
+process8 has received a message from process1
+process8 has received a message from process1
+process8 has received a message from process4
+process8 has received a message from process6
+process8 has received a message from process6
+process8 has received a message from process7
+process8 has received a message from process7
+process8 has received a message from process9
+process9
+process9 has received a message from process0
+process9 has received a message from process2
+process9 has received a message from process2
+process9 has received a message from process2
+process9 has received a message from process3
+process9 has received a message from process4
+process9 has received a message from process4
+process9 has received a message from process4
+********* Correct sorted messages *********
+process0 has received a message from process4
+process0 has received a message from process5
+process0 has received a message from process5
+process0 has received a message from process6
+process0 has received a message from process6
+process0 has received a message from process9
+process1 has received a message from process2
+process1 has received a message from process2
+process1 has received a message from process5
+process1 has received a message from process5
+process1 has received a message from process6
+process1 has received a message from process9
+process1 has received a message from process9
+process1 has received a message from process9
+process2 has received a message from process0
+process2 has received a message from process1
+process2 has received a message from process1
+process2 has received a message from process3
+process2 has received a message from process3
+process2 has received a message from process6
+process2 has received a message from process8
+process2 has received a message from process8
+process2 has received a message from process8
+process3 has received a message from process0
+process3 has received a message from process0
+process3 has received a message from process2
+process3 has received a message from process4
+process3 has received a message from process4
+process3 has received a message from process4
+process3 has received a message from process6
+process3 has received a message from process7
+process3 has received a message from process7
+process3 has received a message from process8
+process3 has received a message from process9
+process3 has received a message from process9
+process4 has received a message from process1
+process4 has received a message from process5
+process4 has received a message from process6
+process4 has received a message from process7
+process5 has received a message from process0
+process5 has received a message from process0
+process5 has received a message from process1
+process5 has received a message from process1
+process5 has received a message from process2
+process5 has received a message from process3
+process5 has received a message from process3
+process5 has received a message from process3
+process5 has received a message from process6
+process5 has received a message from process7
+process5 has received a message from process7
+process5 has received a message from process7
+process5 has received a message from process8
+process5 has received a message from process9
+process6 has received a message from process0
+process6 has received a message from process0
+process6 has received a message from process1
+process6 has received a message from process2
+process6 has received a message from process3
+process6 has received a message from process5
+process6 has received a message from process7
+process6 has received a message from process9
+process7 has received a message from process0
+process7 has received a message from process1
+process7 has received a message from process2
+process7 has received a message from process3
+process7 has received a message from process3
+process7 has received a message from process4
+process7 has received a message from process5
+process7 has received a message from process5
+process7 has received a message from process8
+process7 has received a message from process8
+process7 has received a message from process8
+process7 has received a message from process8
+process8 has received a message from process1
+process8 has received a message from process1
+process8 has received a message from process4
+process8 has received a message from process6
+process8 has received a message from process6
+process8 has received a message from process7
+process8 has received a message from process7
+process8 has received a message from process9
+process9 has received a message from process0
+process9 has received a message from process2
+process9 has received a message from process2
+process9 has received a message from process2
+process9 has received a message from process3
+process9 has received a message from process4
+process9 has received a message from process4
+process9 has received a message from process4
+process9 has received a message from process5
+********* Diff of user and correct sorted messages *********
+1d0
+< process0
+8d6
+< process1
+17d14
+< process2
+27d23
+< process3
+40d35
+< process4
+45d39
+< process5
+60d53
+< process6
+69d61
+< process7
+82d73
+< process8
+91d81
+< process9
+99a90
+> process9 has received a message from process5
+********* End of Correct sorted messages and Diffs *********
+    		srand(1921739 * i);
+
+Possible Points:  30
+
+Comments:
+
+  1.  99 messages?
+
+  2.  If you fork 10 times you create 11 processes total -5
+      The original process does not write messages nor
+      does it read messages!
+
+  3.  many sleep commands -3
+      You are basically trying to turn this into a sequential program
+      which is entirely contrary to the assignment which disallowed
+      wait.
+
+  4.  What happens when you hit the EOF on your reads.  I assume that
+      this is why you do the sleeps so that you can kill the children
+      before they print too many extraneous messages!
+
+  5.  Stdout message does not meet specifications -1
+      Debugging messages still in output
+
+  6.  Basically what is happening is that your children block waiting 
+      for processes to write to the pipe (since there are write ends
+      open) and your parent has to kill the children!
+
+  7.  Don't you think that it would be much simpler to write simple
+      code as shown in class and understand that.
+
+  8.  Incorrect pseudorandom number generation algorithm -5
+      Basically you are generating message numbers for child n
+      as if it were child n-1 but claiming that it is child n.
+
+
+Late              -3
+
+Total Points:     13
+
+
