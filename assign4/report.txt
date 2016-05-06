@@ -1,9 +1,4 @@
 
-
-
-----------
---  vud447
-----------
 assign4/
 assign4/ddiff
 assign4/plgrep
