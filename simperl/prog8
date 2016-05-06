@@ -1,0 +1,15 @@
+#!/usr/bin/perl -w
+$from = $ARGV[0];
+$to = $ARGV[1];
+@fnames = `/usr/bin/find $ARGV[2]`;
+shift @fnames;
+
+foreach $fi ( sort @fnames){
+    chop $fi;
+    
+    if( -f $fi && $fi =~ /\.$from$/){ 
+    $temp = $fi;
+    $fi =~ s/\.$from$/\.$to/;
+        print "mv $temp $fi\n";
+    }
+}

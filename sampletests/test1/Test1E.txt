@@ -1,0 +1,55 @@
+4.
+
+printout the pathnames of all C files under directories
+
+@dirs = <>;
+chop @dirs;
+
+@cfiles = 'find @dirs -name '*.c' -print';
+print @cfiles;
+
+----------------------------------------------------------------------------------------------
+
+5.
+
+pargs -xvf 'a+ b+' file1 file2 file3
+
+file1 = dir1 dir2 dir3
+file2 = dir4 dir5
+file3 = dir6 dir7
+
+e)
+
+$a = shift = -xvf
+$b = shift = 'a+ b+'
+$c = shift = file1
+$d = shift = file2
+$e = <> = dir6
+
+f)
+
+$a = shift = -xvf
+$b = shift = 'a+ b+'
+@c = <> = dir1 dir2 dir3 dir4 dir5 dir6 dir7
+$d = pop @c = dir7
+
+----------------------------------------------------------------------------------------------
+
+7.
+
+interleave th elines of a file with theose of other ifles writing the output to a third file. one line from first file, one from second file and so on.  If the files are different length, then extra line are written at the end.
+
+ileaf filein1 filein2 outfile
+
+open(IN1, @ARGV[0]) || die;
+open(IN2, @argv[1]) || die;
+open(OUT, ">ARGV[2]") || die;
+
+$line1 = <IN1>;
+$line2 = <IN2>;
+
+while($line1 || line2) {
+  print OUT $line1, $line2;
+  $line1 = <IN1>;
+  $line2 = <IN2>;
+}

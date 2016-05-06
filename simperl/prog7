@@ -1,0 +1,9 @@
+#!/usr/bin/perl -w
+@fnames = `/usr/bin/find @ARGV`;
+shift @fnames;
+foreach $fi ( sort @fnames){
+    chop $fi;
+    if( -d $fi){    
+        print "$fi\n";
+    }
+}

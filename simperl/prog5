@@ -1,0 +1,10 @@
+#!/usr/bin/perl -w
+@fnames = `/usr/bin/find @ARGV`;
+shift @fnames;
+foreach $f (@fnames){
+    $ftype = `/usr/bin/file $f`;
+    $hashf{$ftype} = $f;
+}
+foreach $f (sort keys %hashf){
+  print "$hashf{$f}";
+}

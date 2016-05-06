@@ -1,0 +1,12 @@
+#!/usr/bin/perl -w
+die "prog2 <regxpr> <file1> ... \n" if @ARGV < 2;
+$regexpr = shift;
+while(@ARGV){
+    $arg = shift;
+    open(LINES, $arg) or die "could not open $arg to read: $!";
+    while(<LINES>){
+        if(/$regexpr/){
+            print "$arg:$_";
+        }
+    }
+}

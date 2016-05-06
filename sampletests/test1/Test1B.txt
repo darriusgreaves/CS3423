@@ -1,0 +1,88 @@
+4)  printout pathnames of all directores
+
+@dirs = <ARGV>;
+chop @dirs;
+
+@files = 'find @dirs -print';
+chop @files;
+
+@dirs = grep(-d, @files);
+print join("\n", @dirs), "\n";
+
+----------------------------------------------------------------------------------------------
+
+5) pslit = break a file into number of files each of which have given number of lines, except possibly the last file.
+
+spslit 100 file.doc
+
+$num = shift;
+@lines = <ARGV>;
+$n = 1;
+
+while(@lines) {
+  open(OUT,"> ARGV[0]..$n") || die
+
+  if($num <= @lines) {
+    print @lines[0..[$num-1]);
+    @lines = @lines[$num..$#lines];
+  } else {
+    print @lines[0..$#lines];
+    last;
+  }
+  $n++;
+}
+
+----------------------------------------------------------------------------------------------
+
+6)  search all TEXT file under directories for regular expresion
+printout pathname of each files followed by a colon and matching lines for each lines found
+
+pgrep '\w+[mM]aynard' file1 file2 file3
+
+$rexp = shift;
+
+@files = 'find @ARGV -print';
+chop @files;
+
+@tfiles = grep(-f && -t, @files);
+chop @tfiles;
+
+foreach $file(@tfiles) {
+  open(FILE, $file) or next;
+  while(<FILE>) {
+    if({/$rexp/) {
+      print "$file:$_" if /$rexp/;
+      next FILE;
+    }
+  }
+}
+
+----------------------------------------------------------------------------------------------
+
+7)
+
+backup -ap -f sys1 sys2 sys3
+
+sys1 = dir1 dir2
+sys2 = dir3 dir4 dir5
+sys3 = dir7
+
+e)
+
+$c == -f
+$e == "dir3\n"
+$ARGV == "sys2"
+
+f)
+
+sys2 sys3
+
+$a = shift = -ap
+$b = shift = -f
+$c = shift = sys1
+@c = <> = dir3, dir4, dir5, dir7
+$d = pop@c = dir7
+
+$c == "sys1"
+@c = ("dir3\n", "dir4\n", "dir5\n", "dir7\n")
+$d == "dir7\n"

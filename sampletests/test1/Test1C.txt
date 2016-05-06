@@ -1,0 +1,71 @@
+4)  print out pathname of all regular files under directories
+
+@dirs = <>;
+chop @dirs;
+
+@files = 'find @dirs -print';
+chop @files;
+
+@tfiles = grep(-f && -T, @files);
+print join("\n", @tfiles), "\n";
+
+-------------------------------------------------------------------------------------------
+
+5)  search all TEXT filesunder directories for reg exp as first argument.
+
+$reg = shift;
+@files = 'find @ARGV -print';
+chop @files;
+@tfiles = grep(-f && -T, @files);
+
+foreach $file(@tfiles) {
+  open(FILE, $file) || next;
+  while(<FILE>) {
+    print "$file:$_" if /$reg/;
+  }
+}
+
+-------------------------------------------------------------------------------------------
+
+6)  read all lines from input files given on command line and write two output.
+    first output: consists first token without white space from input file
+    second output: consists remainder of each lines (without first token and white space)
+
+open(IN, $ARGV[0]) || die;
+open(OUT1, ">$ARGV[1]") || die;
+open(OUT2, ">$ARGV[2]") || die;
+
+while(<IN>) {
+  /^\s*(\s+)\s+(.*)$/;
+  print OUT1 "$1\n";
+  print OUT2 "$2\n";
+}
+
+-------------------------------------------------------------------------------------------
+
+7.
+
+ptar -cf text.tar.gz file1 file2 file3
+
+file1 = dir1 dir2
+file2 = dir3 dir4 dir5
+file3 = dir 7
+
+e)
+
+$a = shift = -cf
+$b = shift = text.tar.gz
+$c = shift = file1
+push(@ARGV, $c) = file2 file3 file1
+$d = <> = "dir3\n"
+
+f)
+
+@ARGV = @ARGV[2..5];
+
+file2
+
+$a = pop = file3
+$b = shift = file1
+@b = <> = dir3 dir4
+$c = pop @b = dir5

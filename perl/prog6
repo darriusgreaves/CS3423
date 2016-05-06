@@ -1,0 +1,18 @@
+#!/usr/bin/perl -w
+die "prog6 <regular expression> <directory file>\n" if @ARGV < 2;
+$dir = $ARGV[1];
+open(DIR,"/bin/ls $dir |") || die "Unable to open directory $ARGV[1]: $!\n";
+$regexp = $ARGV[0];
+while ( $cur = <DIR> ) {   
+    chop $cur;
+    $cur = "$dir/$cur";
+    if ( -f $cur && -T $cur) {
+        open(INFILE, $cur) or die "Unable to open $cur for read: $!\n";
+        while(<INFILE>){
+            if(/$regexp/){
+                print "$cur:$_";
+            }
+        }
+    }
+}
+

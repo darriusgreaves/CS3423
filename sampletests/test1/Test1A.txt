@@ -1,0 +1,40 @@
+4.
+
+print out the pathnames of all C files under any of directores whose name are given on the command line.
+
+print 'find @ARGV -name '*.c' -print';
+
+----------------------------------------------------------------------------------------------
+
+6.
+
+Search all text files under directories given on command line for regular expressoin given as the first argument on the command line.  Print out the pathnames of each files which mathc is found.
+
+@reg = shift;
+
+@files = 'find @ARGV -print'
+chop @files;
+
+@tfiles = grep(-f && -t, @files);
+
+foreach file(@tfiles) {
+  if(grep(/$reg/, 'cat $file')) {
+    print $file, "\n";
+  }
+}
+
+----------------------------------------------------------------------------------------------
+
+7.
+
+take a text file, split them into two with same size.
+
+psplit head.doc creates head.doc.1 && head.doc.2
+
+@lines = <>;
+
+open(OUT1, ">$ARGV[0].1") || die
+open(OUT2, ">$argv[0].2") || die
+
+print OUT1 @lines[0..$#lines/2];
+print out2 @lines[$#lines/2+1..$#lines];

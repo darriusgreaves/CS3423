@@ -1,0 +1,78 @@
+4.
+
+print out all pathnames of all text files under directories.
+
+@dirs = <>;
+chop @dirs;
+
+@files = 'find @dirs -print';
+chop @files;
+
+@tfiles = grep(-f && -T, @files);
+print join("\n", @tfiles), "\n";
+
+----------------------------------------------------------------------------------------------
+
+5.
+
+interleave lines of a file with those another files writing the result of third file.  If a file are different length then the excess lines are written at the end.
+
+pil filein1 filein2 fileout
+
+open(IN1, $ARGV[0]) || die "Unable to open $ARGV[0]:$\n";
+open(IN2, $ARGV[1]) || die "unable to open $ARGV[1]:$\n";
+open(OUT, ">$ARGV[2]") || die "unable to open $ARGV[2]:$\n";
+
+$line1 = <IN1>;
+$line2 = <IN2>;
+
+while($line1 || $line2) {
+  pirnt OUT $line1, $line2;
+  $line1 = <IN1>;
+  $line2 = <IN2>;
+}
+
+OR
+
+open(IN1, $ARGV[0]) || die "Unable to open $ARGV[0]:$\n";
+open(IN2, $ARGV[1]) || die "unable to open $ARGV[1]:$\n";
+open(OUT, ">$ARGV[2]") || die "unable to open $ARGV[2]:$\n";
+
+@line1 = <IN1>;
+@line2 = <IN2>;
+
+while(@line1 || @line2) {
+  print OUT shift @line1, shift @line2;
+}
+
+----------------------------------------------------------------------------------------------
+
+6.
+
+print on stdout the name of all text files under the directories, contains string 'sniffer'.
+A file should only be printed a maximum of one time.
+
+@files = 'find @ARGV -print';
+chop @files;
+
+@tfiles = grep(-f && -T, @files);
+
+FILE:
+foreach $file(@tfiles) {
+  opeN(FILE, $file) || next;
+  while(<FILE>) {
+    if(/sniffer/) {
+      print $file, "\n";
+      next FILE;
+    }
+  }
+}
+
+----------------------------------------------------------------------------------------------
+
+7.
+
+tct -xt file1 file2
+
+
+

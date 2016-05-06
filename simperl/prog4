@@ -1,0 +1,8 @@
+#!/usr/bin/perl -w
+while(<>){
+  @field = split(/:/,$_);
+  $users{$field[0]} = $field[4];
+}
+foreach $user (sort keys %users){
+  print "$user\t\t$users{$user}\n";
+}

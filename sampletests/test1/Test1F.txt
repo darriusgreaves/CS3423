@@ -1,0 +1,93 @@
+4.
+
+Take a list of names fo files and directories on the command line and print out pathnames of all regular non-text files.
+
+@files = 'find @ARGV -print';
+chop @files;
+
+@bfiles = grep(-f && !-T, @files);
+print join("\n", @bfiles), "\n";
+
+----------------------------------------------------------------------------------------------
+
+5.
+
+merge given two filenames on the command line and an output filename.  fmerge should append each line of the second input file to the end of the corresponding line in the first line seperated by a blank, writing the new line to the output file.
+
+Thus if line 4 of the first input is "cat\n" and line 4 of second file is "dog\n", line 4 of output sould be 'cat dog\n".
+
+open(IN1, $ARGV[0]) || die;
+open(IN2, $ARGV[1]) || die;
+open(OUT, ">$ARGV[2]) || die;
+
+@in1 = <IN1>;
+chop @in1;
+
+@in2 = <IN2>;
+chop @in2;
+
+while(@in1 || @in2) {
+  print OUT shift @n1, " ", shift @n2, "\n";
+}
+
+----------------------------------------------------------------------------------------------
+
+6.
+
+search all TEXT files under directories whose names are in the files whose names are gien on the command lnie for reg. exp.  For first match in each file, print out pathname of the file followed by a colon and then matching line.
+
+$reg = shift;
+
+@dirs = <ARGV>;
+chop @dirs;
+
+@files = 'find @dirs -print';
+chop @files;
+
+@tfiles = grep(-f && -T, @files);
+
+FILE:
+
+foreach $file(@tfiles) {
+  open(FILE, $file) or next;
+  while(<FILE>) {
+    if(/reg/) {
+      print "$file:$_\n";
+      next FILE;
+    }
+  }
+}
+
+----------------------------------------------------------------------------------------------
+
+7.
+
+snoop -s -x cs.machines bio.machines math.machines
+
+cs.machines = ten01
+bio.machines = bio01 bio02 bio03
+math.machines = mat01 mat02
+
+a) last value of @ARGV = math.machines
+b) the value of $ARGV[3] = bio.machines
+c) the value of $#ARGV = 4
+d) what value is used for @ARGV inthe condition test:
+
+print "USage: snoop [-s] [-x] <machine file list>\n" unless @ARGV > 0;
+
+scalar 5
+
+e)
+
+$a = pop = math.machines
+$b = pop = bio.machines
+unshift(@ARGV, $b) = bio.machines -s -x cs.machine
+$c = <> = bio01
+
+f)
+
+$a = pop = math.machines
+$b = shift = -s
+$b = shift = -x
+@b = <> = ten01 bio01 bio02 bio03 mat01 mat02
+$c = pop @b = mat02
