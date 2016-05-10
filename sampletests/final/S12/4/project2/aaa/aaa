@@ -1,0 +1,2500 @@
+
+assign2/
+assign2/find.1
+assign2/news.sed
+assign2/active
+assign2/fold.1
+assign2/env.tex.sample
+assign2/tex.sed
+assign2/pr.1
+assign2/env.ascii
+assign2/ascii.sed
+assign2/wc.1
+assign2/nice.1
+assign2/env.1
+assign2/chmod.1
+assign2/env.ascii.sample
+
+total 212
+drwx------ 2 maynard maynard   4096 Jan 20 22:34 .
+drwx--x--x 3 maynard maynard   4096 Feb  2 08:43 ..
+-rw------- 1 maynard maynard 133615 Jan 20  2004 active
+-rw------- 1 maynard maynard     85 Jan 19 15:13 ascii.sed
+-rw------- 1 maynard maynard   3934 Sep 10  1994 chmod.1
+-rw------- 1 maynard maynard   1761 Sep 10  1994 env.1
+-rw------- 1 maynard maynard   1579 Jan 20 22:10 env.ascii
+-rw------- 1 maynard maynard   1579 Sep 10  1994 env.ascii.sample
+-rw------- 1 maynard maynard   1858 Jan 20  2004 env.tex.sample
+-rw------- 1 maynard maynard  18061 Sep 10  1994 find.1
+-rw------- 1 maynard maynard   1806 Sep 10  1994 fold.1
+-rw------- 1 maynard maynard     56 Jan 17 21:16 news.sed
+-rw------- 1 maynard maynard   1320 Sep 10  1994 nice.1
+-rw------- 1 maynard maynard   4766 Sep 10  1994 pr.1
+-rw------- 1 maynard maynard    396 Jan 20 22:28 tex.sed
+-rw------- 1 maynard maynard   1670 Sep 10  1994 wc.1
+
+*******************************
+*******************************
+News Sed Script
+*******************************
+*******************************
+
+# !/bin/sed -f
+s/^/addgroup /
+s/ [0-9]\+//
+s/ [0-9]\+//
+
+*******************************
+News Sed Output
+*******************************
+
+*******************************
+addgroup general y
+addgroup news.announce.newusers m
+addgroup utsa.test y
+addgroup comp.arch y
+addgroup comp.os.minix y
+addgroup comp.sources.unix m
+addgroup comp.sources.misc m
+addgroup comp.sources.games m
+addgroup utsa.cs.2413.d y
+addgroup utsa.cs.2413 y
+*******************************
+
+CORRECT
+
+
+*******************************
+*******************************
+Ascii Sed Script
+*******************************
+*******************************
+
+# !/bin/sed -f
+# Removes extra control caracters from a MAN file
+s/_//g
+s/[A-Z]//g
+
+*******************************
+Ascii Sed Output
+*******************************
+
+
+-------------------------------
+env.ascii
+-------------------------------
+
+*******************************
+ENV(1L)
+
+
+NAME
+       env - run a program in a modified environment
+
+SYNOPSIS
+       env    [-]    [-i]    [-u   name]   [--ignore-environment]
+       [--unset=name] [name=value]... [command [args...]]
+
+DESCRIPTION
+       This manual page documents the GNU version  of  env.   env
+       runs  a  command with an environment modified as specified
+       by the command line  arguments.   Arguments  of  the  form
+       `variable=value'  set the environment variable variable to
+       value value.  value may be empty (`variable=').  Setting a
+       variable to an empty value is different from unsetting it.
+
+       The  first  remaining  argument  specifies  a  program  to
+       invoke;  it is searched for according to the specification
+       of the PATH environment variable.  Any arguments following
+       that are passed as arguments to that program.
+
+       If  no command name is specified following the environment
+       specifications,  the  resulting  environment  is  printed.
+       This is like specifying a command name of `printenv'.
+
+OPTIONS
+       -u, --unset name
+              Remove  variable  name  from the environment, if it
+              was in the environment.
+
+       -, -i, --ignore-environment
+              Start  with  an  empty  environment,  ignoring  the
+              inherited environment.
+
+       The  long-named options can be introduced with `+' as well
+       as `--', for compatibility with previous releases.   
+       Eventually  support  for  `+'  will  be removed, because it 
+       is incompatible with the POSIX.2 standard.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+nice.ascii
+-------------------------------
+
+*******************************
+NICE(1L)
+
+
+NAME
+       nice - run a program with modified scheduling priority
+
+SYNOPSIS
+       nice     [-n    adjustment]    [-adjustment]    [--adjustment=adjustment] [command [arg...]]
+
+DESCRIPTION
+       This manual page documents the GNU version of nice.  If no
+       arguments  are  given,  nice  prints the current sheduling
+       priority, which it inherited.  Otherwise,  nice  runs  the
+       given  command  with its scheduling priority adjusted.  If
+       no adjustment is given, the priority  of  the  command  is
+       incremented  by  10.  The superuser can specify a negative
+       adjustment.  The priority can be adjusted by nice over the
+       range of -20 (the highest priority) to 19 (the lowest).
+
+OPTIONS
+       -n adjustment, -adjustment, --adjustment=adjustment
+              Add  adjustment instead of 10 to the command's priority.
+
+       The long-named options can be introduced with `+' as  well
+       as  `--', for compatibility with previous releases.  Eventually 
+       support for `+' will  be  removed,  because  it  is
+       incompatible with the POSIX.2 standard.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+chmod.ascii
+-------------------------------
+
+*******************************
+CHMOD(1L)
+
+
+NAME
+       chmod - change the access permissions of files
+
+SYNOPSIS
+       chmod   [-Rcfv]   [--recursive]   [--changes]   [--silent]
+       [--quiet] [--verbose] [--help] [--version] mode file...
+
+DESCRIPTION
+       This manual page  documents  the  GNU  version  of  chmod.
+       chmod changes the permissions of each given file according
+       to mode, which can be either a symbolic representation  of
+       changes  to  make, or an octal number representing the bit
+       pattern for the new permissions.
+
+       The     format     of     a     symbolic      mode      is
+       `[ugoa...][[+-=][rwxXstugo...]...][,...]'.   Multiple sym-
+       bolic operations can be given, separated by commas.
+
+       A combination of the letters `ugoa' controls which  users'
+       access  to  the file will be changed: the user who owns it
+       (u), other users in the file's group (g), other users  not
+       in  the  file's  group  (o), or all users (a).  If none of
+       these are given, the effect is as if `a' were  given,  but
+       bits that are set in the umask are not affected.
+
+       The  operator  `+'  causes  the permissions selected to be
+       added to the existing permissions of each file; `-' causes
+       them  to  be  removed;  and `=' causes them to be the only
+       permissions that the file has.
+
+       The letters `rwxXstugo' select the new permissions for the
+       affected  users:  read  (r), write (w), execute (or access
+       for directories) (x), execute only if the file is a direc-
+       tory  or already has execute permission for some user (X),
+       set user or group ID on execution (s), save  program  text
+       on swap device (t), the permissions that the user who owns
+       the file currently has for it (u),  the  permissions  that
+       other  users  in the file's group have for it (g), and the
+       permissions that other users not in the file's group  have
+       for it (o).
+
+       A  numeric  mode  is  from one to four octal digits (0-7),
+       derived by adding up the bits with values  4,  2,  and  1.
+       Any  omitted  digits are assumed to be leading zeros.  The
+       first digit selects the set user ID (4) and set  group  ID
+       (2)  and save text image (1) attributes.  The second digit
+       selects permissions for the user who owns the  file:  read
+       (4), write (2), and execute (1); the third selects permis-
+       sions for other users in the file's group, with  the  same
+       values;  and  the fourth for other users not in the file's
+       group, with the same values.
+
+       chmod never changes the permissions of symbolic links; the
+       chmod  system  call cannot change their permissions.  This
+       is not a problem since the permissions of  symbolic  links
+       are never used.  However, for each symbolic link listed on
+       the command line, chmod changes  the  permissions  of  the
+       pointed-to  file.   In  contrast,  chmod  ignores symbolic
+       links encountered during recursive directory traversals.
+
+OPTIONS
+       -c, --changes
+              Verbosely describe  only  files  whose  permissions
+              actually change.
+
+       -f, --silent, --quiet
+              Do  not print error messages about files whose per-
+              missions cannot be changed.
+
+       -v, --verbose
+              Verbosely describe changed permissions.
+
+       -R, --recursive
+              Recursively change permissions of  directories  and
+              their contents.
+
+       --help Print  a  usage message on standard output and exit
+              successfully.
+
+       --version
+              Print version information on standard  output  then
+              exit successfully.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+pr.ascii
+-------------------------------
+
+*******************************
+PR(1L)
+
+
+NAME
+       pr - convert text files for printing
+
+SYNOPSIS
+       pr [+PAGE] [-COLUMN] [-abcdfFmrtv] [-e[in-tab-char[in-tab-
+       width]]] [-h header] [-i[out-tab-char[out-tab-width]]] [-l
+       page-length]   [-n[number-separator[digits]]]   [-o  left-
+       margin] [-s[column-separator]] [-w page-width] [file...]
+
+DESCRIPTION
+       This manual page documents the  GNU  version  of  pr.   pr
+       prints  on  the standard output a paginated and optionally
+       multicolumn copy of the text files given  on  the  command
+       line,  or  of  the standard input if no files are given or
+       when the file name `-' is encountered.  Form feeds in  the
+       input cause page breaks in the output.
+
+OPTIONS
+       +PAGE  
+              Begin printing with page PAGE.
+
+       -COLUMN
+              Produce  COLUMN-column  output  and  print  columns
+              down.  The column width is automatically  decreased
+              as  COLUMN  increases; unless you use the -w option
+              to increase the page width  as  well,  this  option
+              might cause some columns to be truncated.
+
+       -a     
+              Print columns across rather than down.
+
+       -b      
+              Balance columns on the last page.
+
+       -c     
+              Print  control characters using hat notation (e.g.,
+              `^G'); print other unprintable characters in  octal
+              backslash notation.
+
+       -d     
+              Double space the output.
+
+       -e[in-tab-char[in-tab-width]]
+              Expand  tabs to spaces on input.  Optional argument
+              in-tab-char is the  input  tab  character,  default
+              tab.   Optional  argument in-tab-width is the input
+              tab character's width, default 8.
+
+       -F, -f 
+              Use a formfeed instead of newlines to separate output pages.
+
+       -h header
+              Replace  the filename in the header with the string
+              header.
+
+       -i[out-tab-char[out-tab-width]]
+              Replace spaces with tabs on output.  Optional argu-
+              ment  out-tab-char  is  the  output  tab character,
+              default tab.  Optional  argument  out-tab-width  is
+              the output tab character's width, default 8.
+
+       -l page-length
+              Set  the  page  length  to  page-length lines.  The
+              default is 66.  If page-length is less than 10, the
+              headers  and  footers  are  omitted,  as  if the -t
+              option had been given.
+
+       -m     
+              Print all files in parallel, one in each column.
+
+       -n[number-separator[digits]]
+              Precede each column with a line number; with paral-
+              lel  files,  precede  each line with a line number.
+              Optional argument number-separator is the character
+              to  print after each number, default tab.  Optional
+              argument digits is the number of  digits  per  line
+              number, default 5.
+
+       -o left-margin
+              Offset  each  line with a margin left-margin spaces
+              wide.  The total page width is this offset plus the
+              width set with the -w option.
+
+       -r     
+              Do  not  print  a  warning message when an argument
+              file cannot be opened.   Failure  to  open  a  file
+              still makes the exit status nonzero, however.
+
+       -s[column-separator]
+              Separate  columns  by  the single character column-
+              separator, default tab, instead of spaces.
+
+       -t     
+              Do not print  the  5-line  header  and  the  5-line
+              trailer  that are normally on each page, and do not
+              fill out the bottoms of pages (with blank lines  or
+              formfeeds).
+
+       -v     
+              Print  unprintable  characters  in  octal backslash notation.
+
+       -w page-width
+              Set the page  width  to  page-width  columns.   The
+              default is 72.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+fold.ascii
+-------------------------------
+
+*******************************
+FOLD(1L)
+
+
+NAME
+       fold - wrap each input line to fit in specified width
+
+SYNOPSIS
+       fold [-bs] [-w width] [--bytes] [--spaces] [--width=width]
+       [file...]
+
+DESCRIPTION
+       This manual page documents the GNU version of fold.   fold
+       prints  the specified files, or the standard input when no
+       files are given or the filename `-' is encountered, on the
+       standard  output.   It  breaks  long  lines  into multiple
+       shorter lines by inserting a newline  at  column  80.   It
+       counts screen columns, so tab characters usually take more
+       than one column, backspace characters decrease the  column
+       count, and carriage return characters set the column count
+       back to zero.
+
+OPTIONS
+       -b, --bytes
+              Count bytes rather  than  columns,  so  that  tabs,
+              backspaces,  and  carriage returns are each counted
+              as taking up one column, just  like  other  charac-
+              ters.
+
+       -s, --spaces
+              Break at word boundaries.  If the line contains any
+              blanks, the line is broken  after  the  last  blank
+              that  falls  within  the  maximum  line length.  If
+              there are no blanks, the line is broken at the max-
+              imum line length, as usual.
+
+       -w, --width width
+              Use  a maximum line length of width columns instead
+              of 80.
+
+       The long-named options can be introduced with `+' as  well
+       as  `--', for compatibility with previous releases.  Even-
+       tually support for `+' will  be  removed,  because  it  is
+       incompatible with the POSIX.2 standard.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+wc.ascii
+-------------------------------
+
+*******************************
+WC(1L)
+
+
+NAME
+       wc - print the number of bytes, words, and lines in files
+
+SYNOPSIS
+       wc   [-clw]   [--bytes]   [--chars]   [--lines]  [--words]
+       [file...]
+
+DESCRIPTION
+       This manual page documents the  GNU  version  of  wc.   wc
+       counts  the  number  of bytes, whitespace-separated words,
+       and newlines in each given file, or the standard input  if
+       none  are  given  or  when  a file named `-' is given.  It
+       prints one line of counts for each file, and if  the  file
+       was given as an argument, it prints the filename following
+       the counts.  If more than one filename is given, wc prints
+       a  final  line  containing the cumulative counts, with the
+       filename `total'.  The counts are printed  in  the  order:
+       lines, words, bytes.
+
+       By default, wc prints all three counts.  Options can specify 
+       that only certain counts be printed.  Options  do  not
+       undo others previously given, so wc --bytes --words prints
+       both the byte counts and the word counts.
+
+OPTIONS
+       -c, --bytes, --chars
+              Print only the byte counts.
+
+       -w, --words
+              Print only the word counts.
+
+       -l, --lines
+              Print only the newline counts.
+
+       The long-named options can be introduced with `+' as  well
+       as  `--', for compatibility with previous releases.  Eventually 
+       support for `+' will  be  removed,  because  it  is incompatible 
+       with the POSIX.2 standard.
+*******************************
+
+
+CORRECT
+
+-------------------------------
+find.ascii
+-------------------------------
+
+*******************************
+FIND(1L)
+
+
+NAME
+       find - search for files in a directory hierarchy
+
+SYNOPSIS
+       find [path...] [expression]
+
+DESCRIPTION
+       This  manual page documents the GNU version of find.  find
+       searches the directory tree rooted at each given  pathname
+       by  evaluating  the  given  expression from left to right,
+       according to the rules of precedence (see  section  OPERA-
+       TORS),  until  the outcome is known (the left hand side is
+       false for and operations, true for  or),  at  which  point
+       find moves on to the next pathname.
+
+       The first argument that begins with `-', `(', `)', `,', or
+       `!' is taken to be the beginning of  the  expression;  any
+       arguments before it are paths to search, and any arguments
+       after it are the rest of the expression.  If no paths  are
+       given, the current directory is used.  If no expression is
+       given, the expression `-print' is used.
+
+       find exits with status 0 if all files are  processed  suc-
+       cessfully, greater than 0 if errors occur.
+
+EXPRESSIONS
+       The expression is made up of options (which affect overall
+       operation rather than the processing of a  specific  file,
+       and  always  return  true),  tests (which return a true or
+       false value), and actions (which  have  side  effects  and
+       return a true or false value), all separated by operators.
+       -and is assumed where the operator  is  omitted.   If  the
+       expression  contains  no actions other than -prune, -print
+       is performed on all files  for  which  the  expression  is
+       true.
+
+OPTIONS
+       All options always return true.
+
+       -daystart
+              Measure  times  (for  -amin, -atime, -cmin, -ctime,
+              -mmin, and -mtime)  from  the  beginning  of  today
+              rather than from 24 hours ago.
+
+       -depth 
+              Process each directory's contents before the directory itself.
+
+       -follow
+              Dereference symbolic links.  Implies -noleaf.
+
+       -maxdepth levels
+              Descend at most  levels  (a  non-negative  integer)
+              levels  of directories below the command line argu-
+              ments.  `-maxdepth 0' means only  apply  the  tests
+              and actions to the command line arguments.
+
+       -mindepth levels
+              Do  not  apply  any tests or actions at levels less
+              than levels (a non-negative  integer).   `-mindepth
+              1'  means process all files except the command line
+              arguments.
+
+       -noleaf
+              Do not optimize by assuming that  directories  con-
+              tain  2  fewer  subdirectories than their hard link
+              count.  Each directory on a normal Unix  filesystem
+              has  at  least  2  hard links: its name and its `.'
+              entry.  Additionally, its subdirectories  (if  any)
+              each  have  a `..'  entry linked to that directory.
+              When find is examining a directory,  after  it  has
+              statted 2 fewer subdirectories than the directory's
+              link count, it knows that the rest of  the  entries
+              in  the directory are non-directories (`leaf' files
+              in the directory tree).  If only the  files'  names
+              need to be examined, there is no need to stat them;
+              this gives a significant increase in search  speed.
+              However, this option might be needed when searching
+              NFS-mounted non-Unix file systems, if they  do  not
+              follow   the  directory-link  convention  described
+              above.
+
+       -version
+              Print find version number on standard error.
+
+       -xdev  
+              Don't descend directories on other filesystems.
+
+TESTS
+       Numeric arguments can be specified as
+
+       +n     for greater than n,
+
+       -n     for less than n,
+
+       n      for exactly n.
+
+       -amin n
+              File was last accessed n minutes ago.
+
+       -anewer file
+              File was last accessed more recently than file  was
+              modified.   -anewer  is affected by -follow only if
+              -follow comes before -anewer on the command line.
+
+       -atime n
+              File was last accessed n*24 hours ago.
+
+       -cmin n
+              File's status was last changed n minutes ago.
+
+       -cnewer file
+              File's status was last changed more  recently  than
+              file  was modified.  -cnewer is affected by -follow
+              only if -follow comes before -cnewer on the command
+              line.
+
+       -ctime n
+              File's status was last changed n*24 hours ago.
+
+       -empty 
+              File  is  empty  and  is either a regular file or a
+              directory.
+
+       -false 
+              Always false.
+
+       -fstype type
+              File is on a filesystem of type  type.   The  valid
+              filesystem  types  vary among different versions of
+              Unix; an incomplete list of filesystem  types  that
+              are accepted on some version of Unix or another is:
+              ufs, 4.2, 4.3, nfs, tmp, mfs, S51K, S52K.
+
+       -gid n 
+              File's numeric group ID is n.
+
+       -group gname
+              File belongs  to  group  gname  (numeric  group  ID
+              allowed).
+
+       -inum n
+              File has inode number n.
+
+       -links n
+              File has n links.
+
+       -lname pattern
+              File  is a symbolic link whose contents match shell
+              pattern pattern.  The metacharacters do  not  treat
+              `/' or `.' specially.
+
+       -mmin n
+              File's data was last modified n minutes ago.
+
+       -mtime n
+              File's data was last modified n*24 hours ago.
+
+       -name pattern
+              Base of path name (the path with the leading direc-
+              tories removed) matches shell pattern pattern.  The
+              metacharacters  (`*', `?', and `[]') do not match a
+              `.' at the start of the base name.
+
+       -newer file
+              File was modified more recently than file.   -newer
+              is affected by -follow only if -follow comes before
+              -newer on the command line.
+
+       -nouser
+              No user corresponds to file's numeric user ID.
+
+       -nogroup
+              No group corresponds to file's numeric group ID.
+
+       -path pattern
+              Path  name  matches  shell  pattern  pattern.   The
+              metacharacters do not treat `/' or `.' specially.
+
+       -perm mode
+              File's  permission  bits are exactly mode (octal or
+              symbolic).  Symbolic modes use mode 0 as a point of
+              departure.
+
+       -perm -mode
+              All  of  the  permission  bits mode are set for the
+              file.
+
+       -perm +mode
+              Any of the permission bits mode  are  set  for  the
+              file.
+
+       -regex pattern
+              Pathname matches regular expression pattern.
+
+       -size n[ck]
+              File  uses  n 512-byte blocks (bytes if `c' follows
+              n, kilobytes if `k' follows n).  The size does  not
+              count  indirect  blocks,  and  does count blocks in
+              sparse files that are not actually allocated.
+
+       -true  
+              Always true.
+
+       -type c
+              File is of type c:
+
+              b      block (buffered) special
+
+              c      character (unbuffered) special
+
+              d      directory
+
+              p      named pipe (FIFO)
+
+              f      regular file
+
+              l      symbolic link
+
+              s      socket
+
+       -uid n 
+              File's numeric user ID is n.
+
+       -used n
+              File was last accessed n days after its status  was
+              last changed.
+
+       -user uname
+              File  is  owned  by  user  uname  (numeric  user ID
+              allowed).
+
+       -xtype c
+              The same as -type unless the  file  is  a  symbolic
+              link.   For symbolic links, if -follow has not been
+              given, true if the file is a link to a file of type
+              c;  if  -follow  has  been given, true if c is `l'.
+              For symbolic links, -xtype checks the type  of  the
+              file that -type does not check.
+
+ACTIONS
+       -exec command ;
+              Execute command; true if 0 status is returned.  All
+              following arguments to find are taken to  be  arguments
+              to  the command until an argument consisting
+              of `;' is encountered.  The string `{}' is replaced
+              by  the current pathname being processed everywhere
+              it occurs in the arguments to the command, not just
+              in arguments where it is alone, as in some versions
+              of find.  Both of these constructions might need to
+              be  escaped  (with a `\') or quoted to protect them
+              from expansion by the shell.
+
+       -fprint file
+              True; print the full pathname into file  file.   If
+              file  does  not  exist when find is run, it is cre-
+              ated; if it does exist, it is truncated.  The file-
+              names  ``/dev/stdout'' and ``/dev/stderr'' are han-
+              dled specially; they refer to the  standard  output
+              and standard error output, respectively.
+
+       -fprint0 file
+              True;  like -print0 but write to file like -fprint.
+
+       -fprintf file format
+              True; like -printf but write to file like  -fprint.
+
+       -ok command ;
+              Like  -exec but ask the user first (on the standard
+              input); if the response does not start with `y'  or
+              `Y', do not run the command, and return false.
+
+       -print True;  
+              print the full pathname on the standard out-
+              put, followed by a newline.
+
+       -print0
+              True; print the full pathname on the standard  out-
+              put,  followed  by  a  null character.  This allows
+              filenames that contain  newlines  to  be  correctly
+              interpreted  by programs that process the find out-
+              put.
+
+       -printf format
+              True; print format on the standard  output,  inter-
+              preting  `\'  escapes  and  `%'  directives.  Field
+              widths and precisions can be specified as with  the
+              `printf'  C  function.  Unlike -print, -printf does
+              not add a newline at the end of  the  string.   The
+              escapes and directives are:
+
+              \a     Alarm bell.
+
+              \b     Backspace.
+
+              \c     Stop  printing from this format immediately.
+
+              \f     Form feed.
+
+              \n     Newline.
+
+              \r     Carriage return.
+
+              \t     Horizontal tab.
+
+              \v     Vertical tab.
+
+              \\     A literal backslash (`\').
+
+              A `\' character followed by any other character  is
+              treated  as an ordinary character, so they both are
+              printed.
+
+              %%     A literal percent sign.
+
+              %a     File's  last  access  time  in  the   format
+                     returned by the C `ctime' function.
+
+              %Ak    File's last access time in the format speci-
+                     fied by k, which is either `@' or  a  direc-
+                     tive  for  the  C  `strftime' function.  The
+                     possible values for k are listed below; some
+                     of  them  might not be available on all sys-
+                     tems,  due  to  differences  in   `strftime'
+                     between systems.
+
+                      @      seconds  since  Jan.  1, 1970, 00:00
+                             GMT.
+
+                     Time fields:
+
+                      H      hour (00..23)
+
+                      I      hour (01..12)
+
+                      k      hour ( 0..23)
+
+                      l      hour ( 1..12)
+
+                      M      minute (00..59)
+
+                      p      locale's AM or PM
+
+                      r      time, 12-hour (hh:mm:ss [AP]M)
+
+                      S      second (00..61)
+
+                      T      time, 24-hour (hh:mm:ss)
+
+                      X      locale's time representation (H:M:S)
+
+                      Z      time zone (e.g., EDT), or nothing if
+                             no time zone is determinable
+
+                     Date fields:
+
+                      a      locale's  abbreviated  weekday  name
+                             (Sun..Sat)
+
+                      A      locale's full weekday name, variable
+                             length (Sunday..Saturday)
+
+                      b      locale's  abbreviated   month   name
+                             (Jan..Dec)
+
+                      B      locale's  full  month name, variable
+                             length (January..December)
+
+                      c      locale's date and time (Sat  Nov  04
+                             12:02:33 EST 1989)
+
+                      d      day of month (01..31)
+
+                      D      date (mm/dd/yy)
+
+                      h      same as b
+
+                      j      day of year (001..366)
+
+                      m      month (01..12)
+
+                      U      week  number  of year with Sunday as
+                             first day of week (00..53)
+
+                      w      day of week (0..6)
+
+                      W      week number of year with  Monday  as
+                             first day of week (00..53)
+
+                      x      locale's     date     representation
+                             (mm/dd/yy)
+
+                      y      last two digits of year (00..99)
+
+                      Y      year (1970...)
+
+              %b     File's size in 512-byte blocks (rounded up).
+
+              %c     File's last status change time in the format
+                     returned by the C `ctime' function.
+
+              %Ck    File's last status change time in the format
+                     specified by k, which is the same as for %A.
+
+              %d     File's depth in the directory tree; 0  means
+                     the file is a command line argument.
+
+              %f     File's pathname with any leading directories
+                     removed.
+
+              %g     File's group name, or numeric  group  ID  if
+                     the group has no name.
+
+              %G     File's numeric group ID.
+
+              %h     Leading directories of file's pathname.
+
+              %H     Command  line  argument under which file was
+                     found.
+
+              %i     File's inode number (in decimal).
+
+              %k     File's size in 1K blocks (rounded up).
+
+              %l     Object of symbolic  link  (empty  string  if
+                     file is not a symbolic link).
+
+              %m     File's permission bits (in octal).
+
+              %n     Number of hard links to file.
+
+              %p     File's pathname.
+
+              %P     File's pathname with the name of the command
+                     line  argument  under  which  it  was  found
+                     removed.
+
+              %s     File's size in bytes.
+
+              %t     File's  last modification time in the format
+                     returned by the C `ctime' function.
+
+              %Tk    File's last modification time in the  format
+                     specified by k, which is the same as for %A.
+
+              %u     File's user name, or numeric user ID if  the
+                     user has no name.
+
+              %U     File's numeric user ID.
+
+              A  `%' character followed by any other character is
+              discarded (but the other character is printed).
+
+       -prune If -depth is not given, true; do  not  descend  the
+              current directory.
+              If -depth is given, false; no effect.
+
+       -ls    True;  list  current  file  in `ls -dils' format on
+              standard  output.   The  block  counts  are  of  1K
+              blocks,    unless    the    environment    variable
+              POSIXLY_CORRECT is  set,  in  which  case  512-byte
+              blocks are used.
+
+OPERATORS
+       Listed in order of decreasing precedence:
+
+       ( expr )
+              Force precedence.
+
+       ! expr True if expr is false.
+
+       -not expr
+              Same as ! expr.
+
+       expr1 expr2
+              And  (implied);  expr2 is not evaluated if expr1 is
+              false.
+
+       expr1 -a expr2
+              Same as expr1 expr2.
+
+       expr1 -and expr2
+              Same as expr1 expr2.
+
+       expr1 -o expr2
+              Or; expr2 is not evaluated if expr1 is true.
+
+       expr1 -or expr2
+              Same as expr1 -o expr2.
+
+       expr1 , expr2
+              List; both expr1 and expr2  are  always  evaluated.
+              The  value  of expr1 is discarded; the value of the
+              list is the value of expr2.
+*******************************
+
+
+ERROR - Ascii Sed Script Error for find.1 
+********* Partial Diff for find.ascii *********
+463c463
+<               POSIXLY_CORRECT is  set,  in  which  case  512-byte
+---
+>               POSIXLYCORRECT is  set,  in  which  case  512-byte
+********* End of Diff for find.ascii *********
+
+********* Correct Ascii Sed Output *********
+FIND(1L)
+
+
+NAME
+       find - search for files in a directory hierarchy
+
+SYNOPSIS
+       find [path...] [expression]
+
+DESCRIPTION
+       This  manual page documents the GNU version of find.  find
+       searches the directory tree rooted at each given  pathname
+       by  evaluating  the  given  expression from left to right,
+       according to the rules of precedence (see  section  OPERA-
+       TORS),  until  the outcome is known (the left hand side is
+       false for and operations, true for  or),  at  which  point
+       find moves on to the next pathname.
+
+       The first argument that begins with `-', `(', `)', `,', or
+       `!' is taken to be the beginning of  the  expression;  any
+       arguments before it are paths to search, and any arguments
+       after it are the rest of the expression.  If no paths  are
+       given, the current directory is used.  If no expression is
+       given, the expression `-print' is used.
+
+       find exits with status 0 if all files are  processed  suc-
+       cessfully, greater than 0 if errors occur.
+
+EXPRESSIONS
+       The expression is made up of options (which affect overall
+       operation rather than the processing of a  specific  file,
+       and  always  return  true),  tests (which return a true or
+       false value), and actions (which  have  side  effects  and
+       return a true or false value), all separated by operators.
+       -and is assumed where the operator  is  omitted.   If  the
+       expression  contains  no actions other than -prune, -print
+       is performed on all files  for  which  the  expression  is
+       true.
+
+OPTIONS
+       All options always return true.
+
+       -daystart
+              Measure  times  (for  -amin, -atime, -cmin, -ctime,
+              -mmin, and -mtime)  from  the  beginning  of  today
+              rather than from 24 hours ago.
+
+       -depth 
+              Process each directory's contents before the directory itself.
+
+       -follow
+              Dereference symbolic links.  Implies -noleaf.
+
+       -maxdepth levels
+              Descend at most  levels  (a  non-negative  integer)
+              levels  of directories below the command line argu-
+              ments.  `-maxdepth 0' means only  apply  the  tests
+              and actions to the command line arguments.
+
+       -mindepth levels
+              Do  not  apply  any tests or actions at levels less
+              than levels (a non-negative  integer).   `-mindepth
+              1'  means process all files except the command line
+              arguments.
+
+       -noleaf
+              Do not optimize by assuming that  directories  con-
+              tain  2  fewer  subdirectories than their hard link
+              count.  Each directory on a normal Unix  filesystem
+              has  at  least  2  hard links: its name and its `.'
+              entry.  Additionally, its subdirectories  (if  any)
+              each  have  a `..'  entry linked to that directory.
+              When find is examining a directory,  after  it  has
+              statted 2 fewer subdirectories than the directory's
+              link count, it knows that the rest of  the  entries
+              in  the directory are non-directories (`leaf' files
+              in the directory tree).  If only the  files'  names
+              need to be examined, there is no need to stat them;
+              this gives a significant increase in search  speed.
+              However, this option might be needed when searching
+              NFS-mounted non-Unix file systems, if they  do  not
+              follow   the  directory-link  convention  described
+              above.
+
+       -version
+              Print find version number on standard error.
+
+       -xdev  
+              Don't descend directories on other filesystems.
+
+TESTS
+       Numeric arguments can be specified as
+
+       +n     for greater than n,
+
+       -n     for less than n,
+
+       n      for exactly n.
+
+       -amin n
+              File was last accessed n minutes ago.
+
+       -anewer file
+              File was last accessed more recently than file  was
+              modified.   -anewer  is affected by -follow only if
+              -follow comes before -anewer on the command line.
+
+       -atime n
+              File was last accessed n*24 hours ago.
+
+       -cmin n
+              File's status was last changed n minutes ago.
+
+       -cnewer file
+              File's status was last changed more  recently  than
+              file  was modified.  -cnewer is affected by -follow
+              only if -follow comes before -cnewer on the command
+              line.
+
+       -ctime n
+              File's status was last changed n*24 hours ago.
+
+       -empty 
+              File  is  empty  and  is either a regular file or a
+              directory.
+
+       -false 
+              Always false.
+
+       -fstype type
+              File is on a filesystem of type  type.   The  valid
+              filesystem  types  vary among different versions of
+              Unix; an incomplete list of filesystem  types  that
+              are accepted on some version of Unix or another is:
+              ufs, 4.2, 4.3, nfs, tmp, mfs, S51K, S52K.
+
+       -gid n 
+              File's numeric group ID is n.
+
+       -group gname
+              File belongs  to  group  gname  (numeric  group  ID
+              allowed).
+
+       -inum n
+              File has inode number n.
+
+       -links n
+              File has n links.
+
+       -lname pattern
+              File  is a symbolic link whose contents match shell
+              pattern pattern.  The metacharacters do  not  treat
+              `/' or `.' specially.
+
+       -mmin n
+              File's data was last modified n minutes ago.
+
+       -mtime n
+              File's data was last modified n*24 hours ago.
+
+       -name pattern
+              Base of path name (the path with the leading direc-
+              tories removed) matches shell pattern pattern.  The
+              metacharacters  (`*', `?', and `[]') do not match a
+              `.' at the start of the base name.
+
+       -newer file
+              File was modified more recently than file.   -newer
+              is affected by -follow only if -follow comes before
+              -newer on the command line.
+
+       -nouser
+              No user corresponds to file's numeric user ID.
+
+       -nogroup
+              No group corresponds to file's numeric group ID.
+
+       -path pattern
+              Path  name  matches  shell  pattern  pattern.   The
+              metacharacters do not treat `/' or `.' specially.
+
+       -perm mode
+              File's  permission  bits are exactly mode (octal or
+              symbolic).  Symbolic modes use mode 0 as a point of
+              departure.
+
+       -perm -mode
+              All  of  the  permission  bits mode are set for the
+              file.
+
+       -perm +mode
+              Any of the permission bits mode  are  set  for  the
+              file.
+
+       -regex pattern
+              Pathname matches regular expression pattern.
+
+       -size n[ck]
+              File  uses  n 512-byte blocks (bytes if `c' follows
+              n, kilobytes if `k' follows n).  The size does  not
+              count  indirect  blocks,  and  does count blocks in
+              sparse files that are not actually allocated.
+
+       -true  
+              Always true.
+
+       -type c
+              File is of type c:
+
+              b      block (buffered) special
+
+              c      character (unbuffered) special
+
+              d      directory
+
+              p      named pipe (FIFO)
+
+              f      regular file
+
+              l      symbolic link
+
+              s      socket
+
+       -uid n 
+              File's numeric user ID is n.
+
+       -used n
+              File was last accessed n days after its status  was
+              last changed.
+
+       -user uname
+              File  is  owned  by  user  uname  (numeric  user ID
+              allowed).
+
+       -xtype c
+              The same as -type unless the  file  is  a  symbolic
+              link.   For symbolic links, if -follow has not been
+              given, true if the file is a link to a file of type
+              c;  if  -follow  has  been given, true if c is `l'.
+              For symbolic links, -xtype checks the type  of  the
+              file that -type does not check.
+
+ACTIONS
+       -exec command ;
+              Execute command; true if 0 status is returned.  All
+              following arguments to find are taken to  be  arguments
+              to  the command until an argument consisting
+              of `;' is encountered.  The string `{}' is replaced
+              by  the current pathname being processed everywhere
+              it occurs in the arguments to the command, not just
+              in arguments where it is alone, as in some versions
+              of find.  Both of these constructions might need to
+              be  escaped  (with a `\') or quoted to protect them
+              from expansion by the shell.
+
+       -fprint file
+              True; print the full pathname into file  file.   If
+              file  does  not  exist when find is run, it is cre-
+              ated; if it does exist, it is truncated.  The file-
+              names  ``/dev/stdout'' and ``/dev/stderr'' are han-
+              dled specially; they refer to the  standard  output
+              and standard error output, respectively.
+
+       -fprint0 file
+              True;  like -print0 but write to file like -fprint.
+
+       -fprintf file format
+              True; like -printf but write to file like  -fprint.
+
+       -ok command ;
+              Like  -exec but ask the user first (on the standard
+              input); if the response does not start with `y'  or
+              `Y', do not run the command, and return false.
+
+       -print True;  
+              print the full pathname on the standard out-
+              put, followed by a newline.
+
+       -print0
+              True; print the full pathname on the standard  out-
+              put,  followed  by  a  null character.  This allows
+              filenames that contain  newlines  to  be  correctly
+              interpreted  by programs that process the find out-
+              put.
+
+       -printf format
+              True; print format on the standard  output,  inter-
+              preting  `\'  escapes  and  `%'  directives.  Field
+              widths and precisions can be specified as with  the
+              `printf'  C  function.  Unlike -print, -printf does
+              not add a newline at the end of  the  string.   The
+              escapes and directives are:
+
+              \a     Alarm bell.
+
+              \b     Backspace.
+
+              \c     Stop  printing from this format immediately.
+
+              \f     Form feed.
+
+              \n     Newline.
+
+              \r     Carriage return.
+
+              \t     Horizontal tab.
+
+              \v     Vertical tab.
+
+              \\     A literal backslash (`\').
+
+              A `\' character followed by any other character  is
+              treated  as an ordinary character, so they both are
+              printed.
+
+              %%     A literal percent sign.
+
+              %a     File's  last  access  time  in  the   format
+                     returned by the C `ctime' function.
+
+              %Ak    File's last access time in the format speci-
+                     fied by k, which is either `@' or  a  direc-
+                     tive  for  the  C  `strftime' function.  The
+                     possible values for k are listed below; some
+                     of  them  might not be available on all sys-
+                     tems,  due  to  differences  in   `strftime'
+                     between systems.
+
+                      @      seconds  since  Jan.  1, 1970, 00:00
+                             GMT.
+
+                     Time fields:
+
+                      H      hour (00..23)
+
+                      I      hour (01..12)
+
+                      k      hour ( 0..23)
+
+                      l      hour ( 1..12)
+
+                      M      minute (00..59)
+
+                      p      locale's AM or PM
+
+                      r      time, 12-hour (hh:mm:ss [AP]M)
+
+                      S      second (00..61)
+
+                      T      time, 24-hour (hh:mm:ss)
+
+                      X      locale's time representation (H:M:S)
+
+                      Z      time zone (e.g., EDT), or nothing if
+                             no time zone is determinable
+
+                     Date fields:
+
+                      a      locale's  abbreviated  weekday  name
+                             (Sun..Sat)
+
+                      A      locale's full weekday name, variable
+                             length (Sunday..Saturday)
+
+                      b      locale's  abbreviated   month   name
+                             (Jan..Dec)
+
+                      B      locale's  full  month name, variable
+                             length (January..December)
+
+                      c      locale's date and time (Sat  Nov  04
+                             12:02:33 EST 1989)
+
+                      d      day of month (01..31)
+
+                      D      date (mm/dd/yy)
+
+                      h      same as b
+
+                      j      day of year (001..366)
+
+                      m      month (01..12)
+
+                      U      week  number  of year with Sunday as
+                             first day of week (00..53)
+
+                      w      day of week (0..6)
+
+                      W      week number of year with  Monday  as
+                             first day of week (00..53)
+
+                      x      locale's     date     representation
+                             (mm/dd/yy)
+
+                      y      last two digits of year (00..99)
+
+                      Y      year (1970...)
+
+              %b     File's size in 512-byte blocks (rounded up).
+
+              %c     File's last status change time in the format
+                     returned by the C `ctime' function.
+
+              %Ck    File's last status change time in the format
+                     specified by k, which is the same as for %A.
+
+              %d     File's depth in the directory tree; 0  means
+                     the file is a command line argument.
+
+              %f     File's pathname with any leading directories
+                     removed.
+
+              %g     File's group name, or numeric  group  ID  if
+                     the group has no name.
+
+              %G     File's numeric group ID.
+
+              %h     Leading directories of file's pathname.
+
+              %H     Command  line  argument under which file was
+                     found.
+
+              %i     File's inode number (in decimal).
+
+              %k     File's size in 1K blocks (rounded up).
+
+              %l     Object of symbolic  link  (empty  string  if
+                     file is not a symbolic link).
+
+              %m     File's permission bits (in octal).
+
+              %n     Number of hard links to file.
+
+              %p     File's pathname.
+
+              %P     File's pathname with the name of the command
+                     line  argument  under  which  it  was  found
+                     removed.
+
+              %s     File's size in bytes.
+
+              %t     File's  last modification time in the format
+                     returned by the C `ctime' function.
+
+              %Tk    File's last modification time in the  format
+                     specified by k, which is the same as for %A.
+
+              %u     File's user name, or numeric user ID if  the
+                     user has no name.
+
+              %U     File's numeric user ID.
+
+              A  `%' character followed by any other character is
+              discarded (but the other character is printed).
+
+       -prune If -depth is not given, true; do  not  descend  the
+              current directory.
+              If -depth is given, false; no effect.
+
+       -ls    True;  list  current  file  in `ls -dils' format on
+              standard  output.   The  block  counts  are  of  1K
+              blocks,    unless    the    environment    variable
+              POSIXLYCORRECT is  set,  in  which  case  512-byte
+              blocks are used.
+
+OPERATORS
+       Listed in order of decreasing precedence:
+
+       ( expr )
+              Force precedence.
+
+       ! expr True if expr is false.
+
+       -not expr
+              Same as ! expr.
+
+       expr1 expr2
+              And  (implied);  expr2 is not evaluated if expr1 is
+              false.
+
+       expr1 -a expr2
+              Same as expr1 expr2.
+
+       expr1 -and expr2
+              Same as expr1 expr2.
+
+       expr1 -o expr2
+              Or; expr2 is not evaluated if expr1 is true.
+
+       expr1 -or expr2
+              Same as expr1 -o expr2.
+
+       expr1 , expr2
+              List; both expr1 and expr2  are  always  evaluated.
+              The  value  of expr1 is discarded; the value of the
+              list is the value of expr2.
+********* End of Correct Ascii Sed Output *********
+
+*******************************
+*******************************
+TeX Sed Script
+*******************************
+*******************************
+
+#!/bin/sed -f
+# sed script to convert ascii file to tex
+s/\\/\\verb+\\+/g
+s/%/\\%/g
+s/\^/\\\^/g
+/^\s*.[+-]/ s/ *$/ \\\\/
+9s/ \\\\//
+s/--/-\\hspace{.01cm}-/g
+/^[A-Z]/ s/^/\\item[/
+1s/\\item\[//
+/^\\item\[/ s/$/] \\hfill \\\\/
+1 i\\\documentstyle[11pt]{article}
+1 i\\\begin{document}
+1 i\\\begin{center} {\\bf
+1 a\} \\end{center}
+1 a\\\begin{description}
+$ a\\\end{description}
+$ a\\\end{document}
+
+*******************************
+TeX Sed Output
+*******************************
+
+
+-------------------------------
+env.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+ENV(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       env - run a program in a modified environment
+
+\item[SYNOPSIS] \hfill \\
+       env    [-]    [-i]    [-u   name]   [-\hspace{.01cm}-ignore-environment]
+       [-\hspace{.01cm}-unset=name] [name=value]... [command [args...]]
+
+\item[DESCRIPTION] \hfill \\
+       This manual page documents the GNU version  of  env.   env
+       runs  a  command with an environment modified as specified
+       by the command line  arguments.   Arguments  of  the  form
+       `variable=value'  set the environment variable variable to
+       value value.  value may be empty (`variable=').  Setting a
+       variable to an empty value is different from unsetting it.
+
+       The  first  remaining  argument  specifies  a  program  to
+       invoke;  it is searched for according to the specification
+       of the PATH environment variable.  Any arguments following
+       that are passed as arguments to that program.
+
+       If  no command name is specified following the environment
+       specifications,  the  resulting  environment  is  printed.
+       This is like specifying a command name of `printenv'.
+
+\item[OPTIONS] \hfill \\
+       -u, -\hspace{.01cm}-unset name \\
+              Remove  variable  name  from the environment, if it
+              was in the environment.
+
+       -, -i, -\hspace{.01cm}-ignore-environment \\
+              Start  with  an  empty  environment,  ignoring  the
+              inherited environment.
+
+       The  long-named options can be introduced with `+' as well
+       as `-\hspace{.01cm}-', for compatibility with previous releases.   
+       Eventually  support  for  `+'  will  be removed, because it 
+       is incompatible with the POSIX.2 standard.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+nice.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+NICE(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       nice - run a program with modified scheduling priority
+
+\item[SYNOPSIS] \hfill \\
+       nice     [-n    adjustment]    [-adjustment]    [-\hspace{.01cm}-adjustment=adjustment] [command [arg...]]
+
+\item[DESCRIPTION] \hfill \\
+       This manual page documents the GNU version of nice.  If no
+       arguments  are  given,  nice  prints the current sheduling
+       priority, which it inherited.  Otherwise,  nice  runs  the
+       given  command  with its scheduling priority adjusted.  If
+       no adjustment is given, the priority  of  the  command  is
+       incremented  by  10.  The superuser can specify a negative
+       adjustment.  The priority can be adjusted by nice over the
+       range of -20 (the highest priority) to 19 (the lowest).
+
+\item[OPTIONS] \hfill \\
+       -n adjustment, -adjustment, -\hspace{.01cm}-adjustment=adjustment \\
+              Add  adjustment instead of 10 to the command's priority.
+
+       The long-named options can be introduced with `+' as  well
+       as  `-\hspace{.01cm}-', for compatibility with previous releases.  Eventually 
+       support for `+' will  be  removed,  because  it  is
+       incompatible with the POSIX.2 standard.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+chmod.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+CHMOD(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       chmod - change the access permissions of files
+
+\item[SYNOPSIS] \hfill \\
+       chmod   [-Rcfv]   [-\hspace{.01cm}-recursive]   [-\hspace{.01cm}-changes]   [-\hspace{.01cm}-silent]
+       [-\hspace{.01cm}-quiet] [-\hspace{.01cm}-verbose] [-\hspace{.01cm}-help] [-\hspace{.01cm}-version] mode file...
+
+\item[DESCRIPTION] \hfill \\
+       This manual page  documents  the  GNU  version  of  chmod.
+       chmod changes the permissions of each given file according
+       to mode, which can be either a symbolic representation  of
+       changes  to  make, or an octal number representing the bit
+       pattern for the new permissions.
+
+       The     format     of     a     symbolic      mode      is
+       `[ugoa...][[+-=][rwxXstugo...]...][,...]'.   Multiple sym-
+       bolic operations can be given, separated by commas.
+
+       A combination of the letters `ugoa' controls which  users'
+       access  to  the file will be changed: the user who owns it
+       (u), other users in the file's group (g), other users  not
+       in  the  file's  group  (o), or all users (a).  If none of
+       these are given, the effect is as if `a' were  given,  but
+       bits that are set in the umask are not affected.
+
+       The  operator  `+'  causes  the permissions selected to be
+       added to the existing permissions of each file; `-' causes
+       them  to  be  removed;  and `=' causes them to be the only
+       permissions that the file has.
+
+       The letters `rwxXstugo' select the new permissions for the
+       affected  users:  read  (r), write (w), execute (or access
+       for directories) (x), execute only if the file is a direc-
+       tory  or already has execute permission for some user (X),
+       set user or group ID on execution (s), save  program  text
+       on swap device (t), the permissions that the user who owns
+       the file currently has for it (u),  the  permissions  that
+       other  users  in the file's group have for it (g), and the
+       permissions that other users not in the file's group  have
+       for it (o).
+
+       A  numeric  mode  is  from one to four octal digits (0-7),
+       derived by adding up the bits with values  4,  2,  and  1.
+       Any  omitted  digits are assumed to be leading zeros.  The
+       first digit selects the set user ID (4) and set  group  ID
+       (2)  and save text image (1) attributes.  The second digit
+       selects permissions for the user who owns the  file:  read
+       (4), write (2), and execute (1); the third selects permis-
+       sions for other users in the file's group, with  the  same
+       values;  and  the fourth for other users not in the file's
+       group, with the same values.
+
+       chmod never changes the permissions of symbolic links; the
+       chmod  system  call cannot change their permissions.  This
+       is not a problem since the permissions of  symbolic  links
+       are never used.  However, for each symbolic link listed on
+       the command line, chmod changes  the  permissions  of  the
+       pointed-to  file.   In  contrast,  chmod  ignores symbolic
+       links encountered during recursive directory traversals.
+
+\item[OPTIONS] \hfill \\
+       -c, -\hspace{.01cm}-changes \\
+              Verbosely describe  only  files  whose  permissions
+              actually change.
+
+       -f, -\hspace{.01cm}-silent, -\hspace{.01cm}-quiet \\
+              Do  not print error messages about files whose per-
+              missions cannot be changed.
+
+       -v, -\hspace{.01cm}-verbose \\
+              Verbosely describe changed permissions.
+
+       -R, -\hspace{.01cm}-recursive \\
+              Recursively change permissions of  directories  and
+              their contents.
+
+       -\hspace{.01cm}-help Print  a  usage message on standard output and exit \\
+              successfully.
+
+       -\hspace{.01cm}-version \\
+              Print version information on standard  output  then
+              exit successfully.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+pr.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+PR(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       pr - convert text files for printing
+
+\item[SYNOPSIS] \hfill \\
+       pr [+PAGE] [-COLUMN] [-abcdfFmrtv] [-e[in-tab-char[in-tab-
+       width]]] [-h header] [-i[out-tab-char[out-tab-width]]] [-l
+       page-length]   [-n[number-separator[digits]]]   [-o  left-
+       margin] [-s[column-separator]] [-w page-width] [file...]
+
+\item[DESCRIPTION] \hfill \\
+       This manual page documents the  GNU  version  of  pr.   pr
+       prints  on  the standard output a paginated and optionally
+       multicolumn copy of the text files given  on  the  command
+       line,  or  of  the standard input if no files are given or
+       when the file name `-' is encountered.  Form feeds in  the
+       input cause page breaks in the output.
+
+\item[OPTIONS] \hfill \\
+       +PAGE \\
+              Begin printing with page PAGE.
+
+       -COLUMN \\
+              Produce  COLUMN-column  output  and  print  columns
+              down.  The column width is automatically  decreased
+              as  COLUMN  increases; unless you use the -w option
+              to increase the page width  as  well,  this  option
+              might cause some columns to be truncated.
+
+       -a \\
+              Print columns across rather than down.
+
+       -b \\
+              Balance columns on the last page.
+
+       -c \\
+              Print  control characters using hat notation (e.g.,
+              `\^G'); print other unprintable characters in  octal
+              backslash notation.
+
+       -d \\
+              Double space the output.
+
+       -e[in-tab-char[in-tab-width]] \\
+              Expand  tabs to spaces on input.  Optional argument
+              in-tab-char is the  input  tab  character,  default
+              tab.   Optional  argument in-tab-width is the input
+              tab character's width, default 8.
+
+       -F, -f \\
+              Use a formfeed instead of newlines to separate output pages.
+
+       -h header \\
+              Replace  the filename in the header with the string
+              header.
+
+       -i[out-tab-char[out-tab-width]] \\
+              Replace spaces with tabs on output.  Optional argu-
+              ment  out-tab-char  is  the  output  tab character,
+              default tab.  Optional  argument  out-tab-width  is
+              the output tab character's width, default 8.
+
+       -l page-length \\
+              Set  the  page  length  to  page-length lines.  The
+              default is 66.  If page-length is less than 10, the
+              headers  and  footers  are  omitted,  as  if the -t
+              option had been given.
+
+       -m \\
+              Print all files in parallel, one in each column.
+
+       -n[number-separator[digits]] \\
+              Precede each column with a line number; with paral-
+              lel  files,  precede  each line with a line number.
+              Optional argument number-separator is the character
+              to  print after each number, default tab.  Optional
+              argument digits is the number of  digits  per  line
+              number, default 5.
+
+       -o left-margin \\
+              Offset  each  line with a margin left-margin spaces
+              wide.  The total page width is this offset plus the
+              width set with the -w option.
+
+       -r \\
+              Do  not  print  a  warning message when an argument
+              file cannot be opened.   Failure  to  open  a  file
+              still makes the exit status nonzero, however.
+
+       -s[column-separator] \\
+              Separate  columns  by  the single character column-
+              separator, default tab, instead of spaces.
+
+       -t \\
+              Do not print  the  5-line  header  and  the  5-line
+              trailer  that are normally on each page, and do not
+              fill out the bottoms of pages (with blank lines  or
+              formfeeds).
+
+       -v \\
+              Print  unprintable  characters  in  octal backslash notation.
+
+       -w page-width \\
+              Set the page  width  to  page-width  columns.   The
+              default is 72.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+fold.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+FOLD(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       fold - wrap each input line to fit in specified width
+
+\item[SYNOPSIS] \hfill \\
+       fold [-bs] [-w width] [-\hspace{.01cm}-bytes] [-\hspace{.01cm}-spaces] [-\hspace{.01cm}-width=width]
+       [file...]
+
+\item[DESCRIPTION] \hfill \\
+       This manual page documents the GNU version of fold.   fold
+       prints  the specified files, or the standard input when no
+       files are given or the filename `-' is encountered, on the
+       standard  output.   It  breaks  long  lines  into multiple
+       shorter lines by inserting a newline  at  column  80.   It
+       counts screen columns, so tab characters usually take more
+       than one column, backspace characters decrease the  column
+       count, and carriage return characters set the column count
+       back to zero.
+
+\item[OPTIONS] \hfill \\
+       -b, -\hspace{.01cm}-bytes \\
+              Count bytes rather  than  columns,  so  that  tabs,
+              backspaces,  and  carriage returns are each counted
+              as taking up one column, just  like  other  charac-
+              ters.
+
+       -s, -\hspace{.01cm}-spaces \\
+              Break at word boundaries.  If the line contains any
+              blanks, the line is broken  after  the  last  blank
+              that  falls  within  the  maximum  line length.  If
+              there are no blanks, the line is broken at the max-
+              imum line length, as usual.
+
+       -w, -\hspace{.01cm}-width width \\
+              Use  a maximum line length of width columns instead
+              of 80.
+
+       The long-named options can be introduced with `+' as  well
+       as  `-\hspace{.01cm}-', for compatibility with previous releases.  Even-
+       tually support for `+' will  be  removed,  because  it  is
+       incompatible with the POSIX.2 standard.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+wc.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+WC(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       wc - print the number of bytes, words, and lines in files
+
+\item[SYNOPSIS] \hfill \\
+       wc   [-clw]   [-\hspace{.01cm}-bytes]   [-\hspace{.01cm}-chars]   [-\hspace{.01cm}-lines]  [-\hspace{.01cm}-words]
+       [file...]
+
+\item[DESCRIPTION] \hfill \\
+       This manual page documents the  GNU  version  of  wc.   wc
+       counts  the  number  of bytes, whitespace-separated words,
+       and newlines in each given file, or the standard input  if
+       none  are  given  or  when  a file named `-' is given.  It
+       prints one line of counts for each file, and if  the  file
+       was given as an argument, it prints the filename following
+       the counts.  If more than one filename is given, wc prints
+       a  final  line  containing the cumulative counts, with the
+       filename `total'.  The counts are printed  in  the  order:
+       lines, words, bytes.
+
+       By default, wc prints all three counts.  Options can specify 
+       that only certain counts be printed.  Options  do  not
+       undo others previously given, so wc -\hspace{.01cm}-bytes -\hspace{.01cm}-words prints
+       both the byte counts and the word counts.
+
+\item[OPTIONS] \hfill \\
+       -c, -\hspace{.01cm}-bytes, -\hspace{.01cm}-chars \\
+              Print only the byte counts.
+
+       -w, -\hspace{.01cm}-words \\
+              Print only the word counts.
+
+       -l, -\hspace{.01cm}-lines \\
+              Print only the newline counts.
+
+       The long-named options can be introduced with `+' as  well
+       as  `-\hspace{.01cm}-', for compatibility with previous releases.  Eventually 
+       support for `+' will  be  removed,  because  it  is incompatible 
+       with the POSIX.2 standard.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+-------------------------------
+find.tex
+-------------------------------
+
+*******************************
+\documentstyle[11pt]{article}
+\begin{document}
+\begin{center} {\bf
+FIND(1L)
+} \end{center}
+\begin{description}
+
+
+\item[NAME] \hfill \\
+       find - search for files in a directory hierarchy
+
+\item[SYNOPSIS] \hfill \\
+       find [path...] [expression]
+
+\item[DESCRIPTION] \hfill \\
+       This  manual page documents the GNU version of find.  find
+       searches the directory tree rooted at each given  pathname
+       by  evaluating  the  given  expression from left to right,
+       according to the rules of precedence (see  section  OPERA-
+       TORS),  until  the outcome is known (the left hand side is
+       false for and operations, true for  or),  at  which  point
+       find moves on to the next pathname.
+
+       The first argument that begins with `-', `(', `)', `,', or
+       `!' is taken to be the beginning of  the  expression;  any
+       arguments before it are paths to search, and any arguments
+       after it are the rest of the expression.  If no paths  are
+       given, the current directory is used.  If no expression is
+       given, the expression `-print' is used.
+
+       find exits with status 0 if all files are  processed  suc-
+       cessfully, greater than 0 if errors occur.
+
+\item[EXPRESSIONS] \hfill \\
+       The expression is made up of options (which affect overall
+       operation rather than the processing of a  specific  file,
+       and  always  return  true),  tests (which return a true or
+       false value), and actions (which  have  side  effects  and
+       return a true or false value), all separated by operators.
+       -and is assumed where the operator  is  omitted.   If  the \\
+       expression  contains  no actions other than -prune, -print
+       is performed on all files  for  which  the  expression  is
+       true.
+
+\item[OPTIONS] \hfill \\
+       All options always return true.
+
+       -daystart \\
+              Measure  times  (for  -amin, -atime, -cmin, -ctime,
+              -mmin, and -mtime)  from  the  beginning  of  today \\
+              rather than from 24 hours ago.
+
+       -depth \\
+              Process each directory's contents before the directory itself.
+
+       -follow \\
+              Dereference symbolic links.  Implies -noleaf.
+
+       -maxdepth levels \\
+              Descend at most  levels  (a  non-negative  integer)
+              levels  of directories below the command line argu-
+              ments.  `-maxdepth 0' means only  apply  the  tests
+              and actions to the command line arguments.
+
+       -mindepth levels \\
+              Do  not  apply  any tests or actions at levels less
+              than levels (a non-negative  integer).   `-mindepth
+              1'  means process all files except the command line
+              arguments.
+
+       -noleaf \\
+              Do not optimize by assuming that  directories  con-
+              tain  2  fewer  subdirectories than their hard link
+              count.  Each directory on a normal Unix  filesystem
+              has  at  least  2  hard links: its name and its `.'
+              entry.  Additionally, its subdirectories  (if  any)
+              each  have  a `..'  entry linked to that directory.
+              When find is examining a directory,  after  it  has
+              statted 2 fewer subdirectories than the directory's
+              link count, it knows that the rest of  the  entries
+              in  the directory are non-directories (`leaf' files
+              in the directory tree).  If only the  files'  names
+              need to be examined, there is no need to stat them;
+              this gives a significant increase in search  speed.
+              However, this option might be needed when searching
+              NFS-mounted non-Unix file systems, if they  do  not
+              follow   the  directory-link  convention  described
+              above.
+
+       -version \\
+              Print find version number on standard error.
+
+       -xdev \\
+              Don't descend directories on other filesystems.
+
+\item[TESTS] \hfill \\
+       Numeric arguments can be specified as
+
+       +n     for greater than n, \\
+
+       -n     for less than n, \\
+
+       n      for exactly n.
+
+       -amin n \\
+              File was last accessed n minutes ago.
+
+       -anewer file \\
+              File was last accessed more recently than file  was
+              modified.   -anewer  is affected by -follow only if
+              -follow comes before -anewer on the command line. \\
+
+       -atime n \\
+              File was last accessed n*24 hours ago.
+
+       -cmin n \\
+              File's status was last changed n minutes ago.
+
+       -cnewer file \\
+              File's status was last changed more  recently  than
+              file  was modified.  -cnewer is affected by -follow
+              only if -follow comes before -cnewer on the command
+              line.
+
+       -ctime n \\
+              File's status was last changed n*24 hours ago.
+
+       -empty \\
+              File  is  empty  and  is either a regular file or a
+              directory.
+
+       -false \\
+              Always false.
+
+       -fstype type \\
+              File is on a filesystem of type  type.   The  valid
+              filesystem  types  vary among different versions of
+              Unix; an incomplete list of filesystem  types  that
+              are accepted on some version of Unix or another is:
+              ufs, 4.2, 4.3, nfs, tmp, mfs, S51K, S52K.
+
+       -gid n \\
+              File's numeric group ID is n.
+
+       -group gname \\
+              File belongs  to  group  gname  (numeric  group  ID
+              allowed).
+
+       -inum n \\
+              File has inode number n.
+
+       -links n \\
+              File has n links.
+
+       -lname pattern \\
+              File  is a symbolic link whose contents match shell
+              pattern pattern.  The metacharacters do  not  treat
+              `/' or `.' specially.
+
+       -mmin n \\
+              File's data was last modified n minutes ago.
+
+       -mtime n \\
+              File's data was last modified n*24 hours ago.
+
+       -name pattern \\
+              Base of path name (the path with the leading direc-
+              tories removed) matches shell pattern pattern.  The
+              metacharacters  (`*', `?', and `[]') do not match a
+              `.' at the start of the base name.
+
+       -newer file \\
+              File was modified more recently than file.   -newer
+              is affected by -follow only if -follow comes before
+              -newer on the command line. \\
+
+       -nouser \\
+              No user corresponds to file's numeric user ID.
+
+       -nogroup \\
+              No group corresponds to file's numeric group ID.
+
+       -path pattern \\
+              Path  name  matches  shell  pattern  pattern.   The
+              metacharacters do not treat `/' or `.' specially.
+
+       -perm mode \\
+              File's  permission  bits are exactly mode (octal or
+              symbolic).  Symbolic modes use mode 0 as a point of
+              departure.
+
+       -perm -mode \\
+              All  of  the  permission  bits mode are set for the
+              file.
+
+       -perm +mode \\
+              Any of the permission bits mode  are  set  for  the
+              file.
+
+       -regex pattern \\
+              Pathname matches regular expression pattern.
+
+       -size n[ck] \\
+              File  uses  n 512-byte blocks (bytes if `c' follows
+              n, kilobytes if `k' follows n).  The size does  not
+              count  indirect  blocks,  and  does count blocks in
+              sparse files that are not actually allocated.
+
+       -true \\
+              Always true.
+
+       -type c \\
+              File is of type c:
+
+              b      block (buffered) special
+
+              c      character (unbuffered) special
+
+              d      directory
+
+              p      named pipe (FIFO)
+
+              f      regular file
+
+              l      symbolic link
+
+              s      socket
+
+       -uid n \\
+              File's numeric user ID is n.
+
+       -used n \\
+              File was last accessed n days after its status  was
+              last changed.
+
+       -user uname \\
+              File  is  owned  by  user  uname  (numeric  user ID
+              allowed).
+
+       -xtype c \\
+              The same as -type unless the  file  is  a  symbolic
+              link.   For symbolic links, if -follow has not been
+              given, true if the file is a link to a file of type
+              c;  if  -follow  has  been given, true if c is `l'.
+              For symbolic links, -xtype checks the type  of  the
+              file that -type does not check.
+
+\item[ACTIONS] \hfill \\
+       -exec command ; \\
+              Execute command; true if 0 status is returned.  All
+              following arguments to find are taken to  be  arguments
+              to  the command until an argument consisting
+              of `;' is encountered.  The string `{}' is replaced
+              by  the current pathname being processed everywhere
+              it occurs in the arguments to the command, not just
+              in arguments where it is alone, as in some versions
+              of find.  Both of these constructions might need to
+              be  escaped  (with a `\verb+\+') or quoted to protect them
+              from expansion by the shell.
+
+       -fprint file \\
+              True; print the full pathname into file  file.   If
+              file  does  not  exist when find is run, it is cre-
+              ated; if it does exist, it is truncated.  The file-
+              names  ``/dev/stdout'' and ``/dev/stderr'' are han-
+              dled specially; they refer to the  standard  output
+              and standard error output, respectively.
+
+       -fprint0 file \\
+              True;  like -print0 but write to file like -fprint.
+
+       -fprintf file format \\
+              True; like -printf but write to file like  -fprint.
+
+       -ok command ; \\
+              Like  -exec but ask the user first (on the standard
+              input); if the response does not start with `y'  or
+              `Y', do not run the command, and return false.
+
+       -print True; \\
+              print the full pathname on the standard out-
+              put, followed by a newline.
+
+       -print0 \\
+              True; print the full pathname on the standard  out-
+              put,  followed  by  a  null character.  This allows
+              filenames that contain  newlines  to  be  correctly
+              interpreted  by programs that process the find out-
+              put.
+
+       -printf format \\
+              True; print format on the standard  output,  inter-
+              preting  `\verb+\+'  escapes  and  `\%'  directives.  Field
+              widths and precisions can be specified as with  the
+              `printf'  C  function.  Unlike -print, -printf does
+              not add a newline at the end of  the  string.   The
+              escapes and directives are:
+
+              \verb+\+a     Alarm bell.
+
+              \verb+\+b     Backspace.
+
+              \verb+\+c     Stop  printing from this format immediately.
+
+              \verb+\+f     Form feed.
+
+              \verb+\+n     Newline.
+
+              \verb+\+r     Carriage return.
+
+              \verb+\+t     Horizontal tab.
+
+              \verb+\+v     Vertical tab.
+
+              \verb+\+\verb+\+     A literal backslash (`\verb+\+').
+
+              A `\verb+\+' character followed by any other character  is
+              treated  as an ordinary character, so they both are
+              printed.
+
+              \%\%     A literal percent sign.
+
+              \%a     File's  last  access  time  in  the   format
+                     returned by the C `ctime' function.
+
+              \%Ak    File's last access time in the format speci-
+                     fied by k, which is either `@' or  a  direc-
+                     tive  for  the  C  `strftime' function.  The
+                     possible values for k are listed below; some
+                     of  them  might not be available on all sys-
+                     tems,  due  to  differences  in   `strftime'
+                     between systems.
+
+                      @      seconds  since  Jan.  1, 1970, 00:00
+                             GMT.
+
+                     Time fields:
+
+                      H      hour (00..23)
+
+                      I      hour (01..12)
+
+                      k      hour ( 0..23)
+
+                      l      hour ( 1..12)
+
+                      M      minute (00..59)
+
+                      p      locale's AM or PM
+
+                      r      time, 12-hour (hh:mm:ss [AP]M)
+
+                      S      second (00..61)
+
+                      T      time, 24-hour (hh:mm:ss)
+
+                      X      locale's time representation (H:M:S)
+
+                      Z      time zone (e.g., EDT), or nothing if
+                             no time zone is determinable
+
+                     Date fields:
+
+                      a      locale's  abbreviated  weekday  name
+                             (Sun..Sat)
+
+                      A      locale's full weekday name, variable
+                             length (Sunday..Saturday)
+
+                      b      locale's  abbreviated   month   name
+                             (Jan..Dec)
+
+                      B      locale's  full  month name, variable
+                             length (January..December)
+
+                      c      locale's date and time (Sat  Nov  04
+                             12:02:33 EST 1989)
+
+                      d      day of month (01..31)
+
+                      D      date (mm/dd/yy)
+
+                      h      same as b
+
+                      j      day of year (001..366)
+
+                      m      month (01..12)
+
+                      U      week  number  of year with Sunday as
+                             first day of week (00..53)
+
+                      w      day of week (0..6)
+
+                      W      week number of year with  Monday  as
+                             first day of week (00..53)
+
+                      x      locale's     date     representation
+                             (mm/dd/yy)
+
+                      y      last two digits of year (00..99)
+
+                      Y      year (1970...)
+
+              \%b     File's size in 512-byte blocks (rounded up).
+
+              \%c     File's last status change time in the format
+                     returned by the C `ctime' function.
+
+              \%Ck    File's last status change time in the format
+                     specified by k, which is the same as for \%A.
+
+              \%d     File's depth in the directory tree; 0  means
+                     the file is a command line argument.
+
+              \%f     File's pathname with any leading directories
+                     removed.
+
+              \%g     File's group name, or numeric  group  ID  if
+                     the group has no name.
+
+              \%G     File's numeric group ID.
+
+              \%h     Leading directories of file's pathname.
+
+              \%H     Command  line  argument under which file was
+                     found.
+
+              \%i     File's inode number (in decimal).
+
+              \%k     File's size in 1K blocks (rounded up).
+
+              \%l     Object of symbolic  link  (empty  string  if
+                     file is not a symbolic link).
+
+              \%m     File's permission bits (in octal).
+
+              \%n     Number of hard links to file.
+
+              \%p     File's pathname.
+
+              \%P     File's pathname with the name of the command
+                     line  argument  under  which  it  was  found
+                     removed.
+
+              \%s     File's size in bytes.
+
+              \%t     File's  last modification time in the format
+                     returned by the C `ctime' function.
+
+              \%Tk    File's last modification time in the  format
+                     specified by k, which is the same as for \%A.
+
+              \%u     File's user name, or numeric user ID if  the
+                     user has no name.
+
+              \%U     File's numeric user ID.
+
+              A  `\%' character followed by any other character is
+              discarded (but the other character is printed).
+
+       -prune If -depth is not given, true; do  not  descend  the \\
+              current directory.
+              If -depth is given, false; no effect.
+
+       -ls    True;  list  current  file  in `ls -dils' format on \\
+              standard  output.   The  block  counts  are  of  1K
+              blocks,    unless    the    environment    variable
+              POSIXLYCORRECT is  set,  in  which  case  512-byte
+              blocks are used.
+
+\item[OPERATORS] \hfill \\
+       Listed in order of decreasing precedence:
+
+       ( expr )
+              Force precedence.
+
+       ! expr True if expr is false.
+
+       -not expr \\
+              Same as ! expr.
+
+       expr1 expr2
+              And  (implied);  expr2 is not evaluated if expr1 is
+              false.
+
+       expr1 -a expr2
+              Same as expr1 expr2.
+
+       expr1 -and expr2
+              Same as expr1 expr2.
+
+       expr1 -o expr2
+              Or; expr2 is not evaluated if expr1 is true.
+
+       expr1 -or expr2
+              Same as expr1 -o expr2.
+
+       expr1 , expr2
+              List; both expr1 and expr2  are  always  evaluated.
+              The  value  of expr1 is discarded; the value of the
+              list is the value of expr2.
+\end{description}
+\end{document}
+*******************************
+
+
+CORRECT
+
+
+Comments:
+
+  News:
+
+  Ascii:
+
+  TeX:
+
+  News:        10
+  Ascii:       10
+  TeX:         10
+
+  Bonus         0
+
+Total Points   30

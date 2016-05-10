@@ -1,3 +1,18 @@
 #! /usr/bin/perl -w
 
-foreach 
+foreach $project (@ARGV) {
+	@students = `ls $project`;
+	chop @students;
+	foreach $student (@students){
+		open(FILE, "$project/$student/$student");
+		while (<FILE>){
+			if(/^Total Points\s+(\d+)/){
+				$grade{$student} += $1;
+			}
+		}		
+	}
+}
+foreach $student (keys %grade){
+	print "$student\t$grade{$student}\n";
+}
+
