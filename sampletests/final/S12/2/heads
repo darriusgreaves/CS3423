@@ -1,0 +1,18 @@
+#! /usr/bin/perl -w
+
+$outfile = pop;
+open(OUT, "> $outfile") || die "open $outfile falied\n";
+FILE:
+foreach $file (@ARGV) {
+    $count = 0;
+    open(FIN, $file) || die "open $file failed\n";
+    print OUT "$file:\n";
+    while(<FIN>){
+        print OUT "$_";
+        $count++;
+        if($count > 4){
+            next FILE;
+        }
+    }
+}
+

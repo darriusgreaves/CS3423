@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+# Final Spring 2012 Problem 3
+# Sarch all TEXT file under directoriesgiven in files given on cmd line
+# for regular expresion.  Printout pathname of each files.
+# usage
+# pgrep '\ca*t+' file1 file2 file3
+
+$rexp = shift;
+@dirs = <ARGV>;
+chop @dirs;
+@files = `find @dirs -print`;
+chop @files;
+@tfiles = grep( -f && -T, @files );
+FILE:
+foreach $file (@tfiles) {
+	open( F, $file ) || next;
+	while ( <F> ) {
+		if ( /$rexp/ ) {
+			print "$file: $_\n";
+			next FILE;
+		}
+	}
+}

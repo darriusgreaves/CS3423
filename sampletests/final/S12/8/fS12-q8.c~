@@ -1,7 +1,4 @@
 /*
-//	Program is based on problem 8 from Final Spr 12 from 
-//  CS 3423 as taught by Prof. Maynard at UTSA
-//	Problem:
 //		Write a C program which will create a total of 35 processes all of which will
 //		have their own seperate pipe, i.e. all processes must be able to write to all
 //		other processes but each will only read from its own pipe.  Each process will
@@ -51,30 +48,25 @@ int main(void){
 				exit(-1);
 			case 0:
 				idx = i;
-				parent = 0;
 				break;
 			default:
-			    parent = 1;
 			    break;
 		}
 
 		// children break out of fork loop, parent keeps forking
-		if(parent == 0){
+		if(parent == 0)
 			break;
-		}
 	}
 
 	// parent done forking can exit
-    if(parent == 1){
+    if(parent)
         exit(0);
-    }
     
 	// child closes read end of all pipes except its own
 	for(i = 0; i < NUM_PROCS; i++){
 		if(idx != i){
 			close(pipes[i][0]);
-		}
-	}
+	}	}
 
 	// child gets its proces id from kernel
 	pidTemp = getpid();
@@ -88,15 +80,11 @@ int main(void){
    				if(write(pipes[i][1], &msg, sizeof(msg)) != sizeof(msg)){
    					perror("write");
    					exit(-1);
-   				}
-   			}
-   		}
-   	}
+   	}   }	} 	}
 
    	// child closes write ends of process pipes
-   	for(i = 0; i < NUM_PROCS; i++){
+   	for(i = 0; i < NUM_PROCS; i++)
    		close(pipes[i][1]);
-   	}
 
    	// child then stays up all night reading 
    	while(read(pipes[idx][0], &msg, sizeof(msg)) == sizeof(msg)){		

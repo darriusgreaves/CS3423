@@ -1,4 +1,4 @@
-// from Spring 2009 Final question 7
+// from Test2cc question 3
 // Write a C program which will fork num (where num is a command-line argument)
 // children. Every child with an odd pid (but not the original parent) will write his pid to all
 // the other children (but not parent). Every child will then read every message written to him,
@@ -13,17 +13,11 @@
 // Process 1234 received a message from Process 4567
 // You do not need to worry about pipes filling.
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 
-// message struct used to send and recieve messages
-struct message {
-	pid_t my_pid;
-	pid_t received_pid;
-};
 
 int main(int argc, char *argv[]){
 	
@@ -33,7 +27,11 @@ int main(int argc, char *argv[]){
 	int parent;                 // flag for fork-loop breakout
 	pid_t pidTemp;              // temp pid
 	
-	struct message msg;			// messages to send or recv
+	// message struct used to send and recieve messages
+	struct message {
+		pid_t my_pid;
+		pid_t received_pid;
+	} msg;			
 
 	// check usage
 	if(argc != 2){
@@ -113,10 +111,7 @@ int main(int argc, char *argv[]){
 					if(write(pipes[i][1], &(pidTemp), sizeof(pidTemp)) != sizeof(pidTemp)){
 						perror("write");
 						exit(-1);
-					}
-				}
-			}
-		}
+		}	}	}	}
 
 		// close write ends of pipes of all children
 		for(i = 0; i < numChildren; i++) {

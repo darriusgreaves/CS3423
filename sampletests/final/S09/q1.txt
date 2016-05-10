@@ -1,0 +1,7 @@
+(e i) value of $c: file1
+(e ii) value of @d: dir5
+ 
+ dir6
+
+(e iii) value of $e: dir4
+

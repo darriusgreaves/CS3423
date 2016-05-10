@@ -1,0 +1,9 @@
+(a) list value of @ARGV: -t reactive file1 file2 file3
+(b) value of $#ARGV: 4
+(c) value of $bat: 6
+(d i) value of $d: file3
+(d ii) value of $e: dir6
+
+(d iii) value of $ARGV: file3
+(d iiii) list value of @ARGV: file2
+

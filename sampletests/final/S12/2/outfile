@@ -1,0 +1,18 @@
+file1:
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+file2:
+Jan 20 00:00:00 exely CROND[24716]: (root) CMD (   /usr/share/sshd-monitor/sshd-restarter) 
+Jan 20 00:00:00 exely CROND[24718]: (root) CMD (/usr/local/etc/logcheck.sh) 
+Jan 20 00:00:00 exely CROND[24722]: (root) CMD (/usr/sbin/ntpdate -s ntp.cs.utsa.edu >& /dev/null) 
+Jan 20 00:00:00 exely CROND[24721]: (mail) CMD (/usr/bin/python -S /usr/lib/mailman/cron/gate_news) 
+Jan 20 00:00:01 exely ntpdate[24723]: adjust time server 129.115.28.18 offset 0.059024 sec
+file3:
+#device		device		mount		FS	fsck	mount	mount
+#to mount	to fsck		point		type	pass	at boot	options
+#
+
+#/dev/dsk/c1d0s2 /dev/rdsk/c1d0s2 /usr		ufs	1	yes	-

@@ -1,0 +1,38 @@
+#!/usr/bin/perl -w
+# question 1 from Final Spring 2012
+
+
+print "(a) list value of \@ARGV: @ARGV\n";
+print "(b) value of \$\#ARGV: $#ARGV\n";
+$size = @ARGV - 1;
+print "(c) value of \$size: $size\n";
+
+Question D
+	$a = shift;
+	$b = pop;
+	$b = shift;
+	push(@ARGV, $b);
+	$d = <>; # destructive
+
+	print "(d i) value of \$b: $b\n";
+	print "(d ii) value of \$d: $d\n";
+	print "(d iii) value of \$ARGV: $ARGV\n";
+	print "(d iiii) value of \@ARGV: @ARGV\n";
+
+# Question E
+	# $a = shift;
+	# $b = shift;
+	# @d = <>;
+	# $e = pop @d;
+	# @f = splice(@d, 2, 3, "fred");
+
+	# print "(e i) value of \$e: $e\n";
+	# print "(e ii) value of \@d: @d\n";
+	# print "(e iii) value of \@f: @f\n";
+
+
+
+
+
+
+

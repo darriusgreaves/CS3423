@@ -1,0 +1,31 @@
+#!/usr/bin/perl -w
+# question1 from Final Spring 2009
+
+# print "(a) list value of \@ARGV: @ARGV\n";
+# print "(b) value of \$\#ARGV: $#ARGV\n";
+# $bat = @ARGV + 1;
+# print "(c) value of \$bat: $bat\n";
+
+# Question D
+	# $a = shift;
+	# $b = shift;
+	# $c = shift;
+	# $d = pop;
+	# unshift(@ARGV, $d);
+	# $e = <>; # destructive
+
+	# print "(d i) value of \$d: $d\n";
+	# print "(d ii) value of \$e: $e\n";
+	# print "(d iii) value of \$ARGV: $ARGV\n";
+	# print "(d iiii) list value of \@ARGV: @ARGV\n";
+
+# Question E
+	$a = shift;
+	$b = shift;
+	$c = shift;
+	@d = <>;
+	$e = shift @d;
+
+	print "(e i) value of \$c: $c\n";
+	print "(e ii) value of \@d: @d\n";
+	print "(e iii) value of \$e: $e\n";

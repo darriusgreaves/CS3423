@@ -1,0 +1,16 @@
+(a) list value of @ARGV: -1 maynard srobbins krobbins dj
+(b) value of $#ARGV: 4
+(c) value of $size: 4
+(d i) value of $b: maynard
+(d ii) value of $d: vip
+
+(d iii) value of $ARGV: srobbins
+(d iiii) value of @ARGV: krobbins maynard
+
+(e i) value of $e: werebane
+(e ii) value of @d: vip
+ vip0
+ fred zorkmid
+
+(e iii) value of @f: vip2 visual64
+ visualk
